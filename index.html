@@ -7,19 +7,25 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    
-    <div class="selectClub">
-        <div>
-            <label for="horseSex">性別</label>
-            <select class="horseSex" required>
-                <option value="" disabled selected>性別</option>
-                <option value="セン">セン</option>
-                <option value="牝">牝</option>
-                <option value="牡">牡</option>
-            </select>
-        </div>
+    <div class="topHeaders">
+        <h2>岡山県馬術連盟</h2>
+        <h1>第48回中国・四国馬術大会</h1>
+        <h2>2024年5月16日 〜 2024年5月19日</h2>
+        <h1 class="damask-heading">8</h1>
     </div>
     
+    <div class="container">
+        <label for="clubSelect">Select Club:</label>
+        <select id="clubSelect">
+            <option value="">Select a club</option>
+        </select>
+        <br><br>
+        <label for="codeInput" id="codeLabel" style="display: none;">Enter Code:</label>
+        <input type="text" id="codeInput" style="display: none;">
+        <br><br>
+        <button id="submitButton" style="display: none;">Submit</button>
+    </div>
+    <div id="result" class="result"></div>
     <script src="script.js"></script>
 </body>
 </html>

@@ -1,0 +1,20 @@
+
+@font-face {
+    font-family: 'DamaskDings';
+    src: url('fonts/DamaskDings1.ttf') format('truetype');
+}
+
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    margin: 20px;
+}
+
+.result {
+    margin-top: 20px;
+    font-size: 1.2em;
+    color: green;
+}
