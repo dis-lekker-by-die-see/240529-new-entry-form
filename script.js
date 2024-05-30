@@ -50,7 +50,7 @@ function processClubSelection(clubData) {
             
         } else if (selectedClub !== "") {
             codeInput.style.display = 'block';
-            codeInput.style.padding = '1.5%'
+            //codeInput.style.padding = '1.5%'
             submitButton.style.display = 'block';
         } else {
             codeInput.style.display = 'none';
