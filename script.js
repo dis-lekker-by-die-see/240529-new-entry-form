@@ -70,27 +70,39 @@
 // };
 
 ///////////////////////////////////////////////////////////
-
-
-
-
-
-
-
 document.addEventListener("DOMContentLoaded", function() {
-    const clubData = [
-        {
-            "fileName": "/Users/user1/Barrabas/AA-Git/240529-new-entry-form/蒜山ホースパーク_8769.json",
-            "clubName": "蒜山ホースパーク",
-            "code": 8769
-        },
-        {
-            "fileName": "/Users/user1/Barrabas/AA-Git/240529-new-entry-form/大山乗馬センター_1234.json",
-            "clubName": "大山乗馬センター",
-            "code": 1234
-        }
-    ];
+    fetch('json_files_list.json')
+        .then(response => response.json())
+        .then(data => {
+            const clubData = data;
+            // The rest of the logic will be handled elsewhere
+            processClubSelection(clubData);
+            console.log(clubData); // For debugging purposes, to verify the data
+        })
+        .catch(error => console.error('Error fetching the JSON file:', error));
+});
 
+
+
+
+
+
+// document.addEventListener("DOMContentLoaded", function() {
+//     const clubData = [
+//         {
+//             "fileName": "/Users/user1/Barrabas/AA-Git/240529-new-entry-form/蒜山ホースパーク_8769.json",
+//             "clubName": "蒜山ホースパーク",
+//             "code": 8769
+//         },
+//         {
+//             "fileName": "/Users/user1/Barrabas/AA-Git/240529-new-entry-form/大山乗馬センター_1234.json",
+//             "clubName": "大山乗馬センター",
+//             "code": 1234
+//         }
+//     ];
+// });
+
+function processClubSelection(clubData) {
     const clubSelectContainer = document.getElementById('clubSelectContainer');
     const clubSelect = document.getElementById('clubSelect');
     const codeInput = document.getElementById('codeInput');
@@ -150,7 +162,7 @@ document.addEventListener("DOMContentLoaded", function() {
             resultDiv.style.color = 'red';
         }
     });
-});
+}
 
 
 function entriesFromExistingClub(selectedClub) {
