@@ -5,8 +5,8 @@
 }
 
 h1, h2 {
-    margin-top: -20px;
-    text-align: center;
+    /*margin-top: -20px;
+    */text-align: center;
     font-weight: 500;
     color: #2b2b2b;
 }
@@ -19,7 +19,7 @@ h1, h2 {
 }
 
 body {
-    font-family: "Segoe UI", "Meiryo UI", sans-serif;
+    font-family: "Segoe UI", "Meiryo UI", sans-serif;   
     margin: 20px;
     padding: 20px;
     background-color: #e6f2e6;
@@ -32,8 +32,8 @@ body {
     align-items: center;
     justify-content: center;
 
-    max-width: 1200px;
-    margin: 20px auto;
+    max-width: 100%;
+    margin: 10px auto;
     padding: 20px;
     background: white;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
@@ -43,7 +43,8 @@ body {
 /*------- Select Club --------------------------------------------------------------------*/
 .clubSelectContainer {
     display: flex;
-    width: 35%;
+    width: 20%;
+    min-width: 200px;
     flex-direction: column; 
     align-items: center;
 }

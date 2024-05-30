@@ -1,5 +1,11 @@
 
 
+
+
+// const currentTimestampInSeconds = Math.floor(Date.now() / 1000);
+// console.log(currentTimestampInSeconds); // Example output: 1653498845
+
+
 //*///////////////////////////////////////////////////////////////////////////////////////////////////////
 document.addEventListener("DOMContentLoaded", function() {
     fetch('json_files_list.json')
