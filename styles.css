@@ -84,7 +84,7 @@ body {
 
 
 
-table {
+/*table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
@@ -99,6 +99,38 @@ th {
 }
 .table-container {
     display: none;
+}
+*/
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    font-size: 0.8em;
+    background-color: #f4f4f4;
+    color: #333;
+}
+td {
+    font-size: 0.7em;
+}
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+.table-container {
+    margin-top: 20px;
 }
 
 

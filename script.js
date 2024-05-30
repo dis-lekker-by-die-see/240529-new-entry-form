@@ -115,15 +115,16 @@ async function fetchAndParseJSON(file) {
 
 function displayClub(club) {
     const tableContainer = document.getElementById('clubTableContainer');
-    let tableHTML = `<table><tr><th>Club Name</th><th>Registration Officer</th><th>Mobile</th><th>Phone</th><th>Email</th><th>Fax</th></tr>`;
+    let tableHTML = `<table><tr><th>団体名</th><th>申込責任者</th><th>携帯</th><th>電話</th><th>email</th><th>FAX</th><th>住所</th></tr>`;
     club.forEach(c => {
         tableHTML += `<tr>
-            <td contenteditable="true">${c.clubName}</td>
+            <td>${c.clubName}</td>
             <td contenteditable="true">${c.registrationOfficer}</td>
             <td contenteditable="true">${c.mobile}</td>
             <td contenteditable="true">${c.phone}</td>
             <td contenteditable="true">${c.email}</td>
             <td contenteditable="true">${c.fax}</td>
+            <td>${c.address}</td>
         </tr>`;
     });
     tableHTML += `</table>`;
@@ -133,16 +134,16 @@ function displayClub(club) {
 
 function displayTeams(teams) {
     const tableContainer = document.getElementById('teamsTableContainer');
-    let tableHTML = `<table><tr><th>Team Number</th><th>Team Name</th><th>Action</th></tr>`;
+    let tableHTML = `<table><tr><th>番</th><th>所属名</th><th>Action</th></tr>`;
     teams.forEach(t => {
         tableHTML += `<tr>
-            <td contenteditable="true">${t.teamNumber}</td>
+            <td>${t.teamNumber}</td>
             <td contenteditable="true">${t.teamName}</td>
-            <td><button class="deleteRow">Delete</button></td>
+            <td><button class="deleteRow"> X </button></td>
         </tr>`;
     });
         tableHTML += `</table>`;
-    tableHTML += `<button id="addTeamRow" class="addRowButton" data-container-id="teamsTableContainer" data-headers="Team Number,Team Name,Action">Add Row</button>`;
+    tableHTML += `<button id="addTeamRow" class="addRowButton" data-container-id="teamsTableContainer" data-headers="Team Number,Team Name">Add Row</button>`;
     tableContainer.innerHTML = tableHTML;
     tableContainer.style.display = 'block';
 
@@ -154,10 +155,10 @@ function displayTeams(teams) {
 
 function displayHorses(horses) {
     const tableContainer = document.getElementById('horsesTableContainer');
-    let tableHTML = `<table><tr><th>Horse Number</th><th>Horse Name</th><th>Horse Name Furigana</th><th>Horse Reg Number</th><th>Horse Sex</th><th>Horse Age</th><th>Horse Color</th><th>Horse Breed</th><th>Horse Origin</th><th>Horse Owner</th><th>Action</th></tr>`;
+    let tableHTML = `<table><tr><th>番</th><th>馬名</th><th>フリガナ</th><th>登録番号</th><th>性別</th><th>年齢</th><th>毛色</th><th>品種</th><th>産地</th><th>所有者</th><th>Action</th></tr>`;
     horses.forEach(h => {
         tableHTML += `<tr>
-            <td contenteditable="true">${h.horseNumber}</td>
+            <td>${h.horseNumber}</td>
             <td contenteditable="true">${h.horseName}</td>
             <td contenteditable="true">${h.horseNameFurigana}</td>
             <td contenteditable="true">${h.horseRegNumber}</td>
@@ -167,7 +168,7 @@ function displayHorses(horses) {
             <td contenteditable="true">${h.horseBreed}</td>
             <td contenteditable="true">${h.horseOrigin}</td>
             <td contenteditable="true">${h.horseOwner}</td>
-            <td><button class="deleteRow">Delete</button></td>
+            <td><button class="deleteRow"> X </button></td>
         </tr>`;
     });
     tableHTML += `</table>`;
@@ -183,15 +184,15 @@ function displayHorses(horses) {
 
 function displayRiders(riders) {
     const tableContainer = document.getElementById('ridersTableContainer');
-    let tableHTML = `<table><tr><th>Rider Number</th><th>Rider Name</th><th>Rider Name Furigana</th><th>Rider Reg Number</th><th>Rider Sex</th><th>Action</th></tr>`;
+    let tableHTML = `<table><tr><th>番</th><th>選手名</th><th>フリガナ</th><th>登録番号</th><th>性別</th><th>Action</th></tr>`;
     riders.forEach(r => {
         tableHTML += `<tr>
-            <td contenteditable="true">${r.riderNumber}</td>
+            <td>${r.riderNumber}</td>
             <td contenteditable="true">${r.riderName}</td>
             <td contenteditable="true">${r.riderNameFurigana}</td>
             <td contenteditable="true">${r.riderRegNumber}</td>
             <td contenteditable="true">${r.riderSex}</td>
-            <td><button class="deleteRow">Delete</button></td>
+            <td><button class="deleteRow"> X </button></td>
         </tr>`;
     });
     tableHTML += `</table>`;
@@ -215,34 +216,34 @@ function handleAddRow(event) {
     addRow(containerId, headers);
 }
 
-function addRow(containerId, headers) {
-    const tableContainer = document.getElementById(containerId);
-    const table = tableContainer.querySelector('table');
-    const newRow = document.createElement('tr');
+// function addRow(containerId, headers) {
+//     const tableContainer = document.getElementById(containerId);
+//     const table = tableContainer.querySelector('table');
+//     const newRow = document.createElement('tr');
     
-    headers.forEach(header => {
-        const newCell = document.createElement('td');
-        newCell.setAttribute('contenteditable', 'true');
-        newRow.appendChild(newCell);
-    });
+//     headers.forEach(header => {
+//         const newCell = document.createElement('td');
+//         newCell.setAttribute('contenteditable', 'true');
+//         newRow.appendChild(newCell);
+//     });
 
-    // Add the new row to the table
-    table.appendChild(newRow);
+//     // Add the new row to the table
+//     table.appendChild(newRow);
 
-    // Change the 'Add Row' button to 'Update Table'
-    //const addButton = tableContainer.querySelector('button');
-    const addButton = tableContainer.querySelector('.addRowButton');
-    addButton.textContent = 'Update Table';
-    addButton.removeEventListener('click', handleAddRow);
-    addButton.addEventListener('click', () => {
-        if (validateRow(newRow)) {
-            addButton.textContent = 'Add Row';
-            addButton.addEventListener('click', handleAddRow);
-        } else {
-            alert('Please fill in all cells.');
-        }
-    });
-}
+//     // Change the 'Add Row' button to 'Update Table'
+//     //const addButton = tableContainer.querySelector('button');
+//     const addButton = tableContainer.querySelector('.addRowButton');
+//     addButton.textContent = 'Update Table';
+//     addButton.removeEventListener('click', handleAddRow);
+//     addButton.addEventListener('click', () => {
+//         if (validateRow(newRow)) {
+//             addButton.textContent = 'Add Row';
+//             addButton.addEventListener('click', handleAddRow);
+//         } else {
+//             alert('Please fill in all cells.');
+//         }
+//     });
+// }
 
 function validateRow(row) {
     const cells = row.querySelectorAll('td');
@@ -255,7 +256,7 @@ function validateRow(row) {
 }
 
 //////////////////////////////////////////////////////////////////////////////////
-//          Update Button at bottom of Tables 
+//          [Update Button] at bottom of Tables 
 document.getElementById('updateButton').addEventListener('click', function() {
     const tableContainers = ['clubTableContainer', 'teamsTableContainer', 'horsesTableContainer', 'ridersTableContainer'];
     const updatedData = {};
@@ -315,7 +316,7 @@ document.getElementById('updateButton').addEventListener('click', function() {
 //             <td contenteditable="true">${c.phone}</td>
 //             <td contenteditable="true">${c.email}</td>
 //             <td contenteditable="true">${c.fax}</td>
-//             <td><button class="deleteRow">Delete</button></td>
+//             <td><button class="deleteRow"> X </button></td>
 //         </tr>`;
 //     });
 //     tableHTML += `</table>`;
@@ -330,7 +331,7 @@ document.getElementById('updateButton').addEventListener('click', function() {
 //         tableHTML += `<tr>
 //             <td contenteditable="true">${t.teamNumber}</td>
 //             <td contenteditable="true">${t.teamName}</td>
-//             <td><button class="deleteRow">Delete</button></td>
+//             <td><button class="deleteRow"> X </button></td>
 //         </tr>`;
 //     });
 //     tableHTML += `</table>`;
@@ -359,7 +360,7 @@ document.getElementById('updateButton').addEventListener('click', function() {
 //             <td contenteditable="true">${h.horseBreed}</td>
 //             <td contenteditable="true">${h.horseOrigin}</td>
 //             <td contenteditable="true">${h.horseOwner}</td>
-//             <td><button class="deleteRow">Delete</button></td>
+//             <td><button class="deleteRow"> X </button></td>
 //         </tr>`;
 //     });
 //     tableHTML += `</table>`;
@@ -383,7 +384,7 @@ document.getElementById('updateButton').addEventListener('click', function() {
 //             <td contenteditable="true">${r.riderNameFurigana}</td>
 //             <td contenteditable="true">${r.riderRegNumber}</td>
 //             <td>${r.riderSex}</td>
-//             <td><button class="deleteRow">Delete</button></td>
+//             <td><button class="deleteRow"> X </button></td>
 //         </tr>`;
 //     });
 //     tableHTML += `</table>`;
@@ -403,41 +404,42 @@ document.getElementById('updateButton').addEventListener('click', function() {
 //     addRow(containerId, headers);
 // }
 
-// function addRow(containerId, headers) {
-//     const tableContainer = document.getElementById(containerId);
-//     const table = tableContainer.querySelector('table');
-//     const newRow = document.createElement('tr');
+function addRow(containerId, headers) {
+    const tableContainer = document.getElementById(containerId);
+    const table = tableContainer.querySelector('table');
+    const newRow = document.createElement('tr');
     
-//     headers.forEach(header => {
-//         let newCell = document.createElement('td');
-//         if (header === 'Rider Sex') {
-//             newCell.innerHTML = `<select class="riderSex" required>
-//                                     <option value="" disabled selected>性別</option>
-//                                     <option value="男子">男子</option>
-//                                     <option value="女子">女子</option>
-//                                 </select>`;
-//         } else {
-//             newCell.setAttribute('contenteditable', 'true');
-//         }
-//         newRow.appendChild(newCell);
-//     });
+    headers.forEach(header => {
+        let newCell = document.createElement('td');
+        if (header === 'Rider Sex') {
+            newCell.innerHTML = `<select class="riderSex" required>
+                                    <option value="" disabled selected>性別</option>
+                                    <option value="男子">男子</option>
+                                    <option value="女子">女子</option>
+                                </select>`;
+        } else {
+            newCell.setAttribute('contenteditable', 'true');
+        }
+        newRow.appendChild(newCell);
+    });
 
-//     // Add the new row to the table
-//     table.appendChild(newRow);
+    // Add the new row to the table
+    table.appendChild(newRow);
 
-//     // Change the 'Add Row' button to 'Update Table'
-//     const addButton = tableContainer.querySelector('button');
-//     addButton.textContent = 'Update Table';
-//     addButton.removeEventListener('click', handleAddRow);
-//     addButton.addEventListener('click', () => {
-//         if (validateRow(newRow)) {
-//             addButton.textContent = 'Add Row';
-//             addButton.addEventListener('click', handleAddRow);
-//         } else {
-//             alert('Please fill in all cells.');
-//         }
-//     });
-// }
+    // Change the 'Add Row' button to 'Update Table'
+    //const addButton = tableContainer.querySelector('button');
+    const addButton = tableContainer.querySelector('.addRowButton');
+    addButton.textContent = 'Update Table';
+    addButton.removeEventListener('click', handleAddRow);
+    addButton.addEventListener('click', () => {
+        if (validateRow(newRow)) {
+            addButton.textContent = 'Add Row';
+            addButton.addEventListener('click', handleAddRow);
+        } else {
+            alert('Please fill in all cells.');
+        }
+    });
+}
 
 // function validateRow(row) {
 //     const cells = row.querySelectorAll('td');
