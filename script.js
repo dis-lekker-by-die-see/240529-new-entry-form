@@ -63,6 +63,20 @@
 //         .catch(error => console.error('Error fetching the JSON file:', error));
 // });
 
+/////////////////////////////////////////////////////////////
+// This script resets the form identified by myForm whenever the page is loaded, ensuring that all fields are set to their initial values.
+// window.onload = function() {
+//     document.getElementById('myForm').reset();
+// };
+
+///////////////////////////////////////////////////////////
+
+
+
+
+
+
+
 document.addEventListener("DOMContentLoaded", function() {
     const clubData = [
         {
@@ -77,8 +91,8 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     ];
 
+    const clubSelectContainer = document.getElementById('clubSelectContainer');
     const clubSelect = document.getElementById('clubSelect');
-    const codeLabel = document.getElementById('codeLabel');
     const codeInput = document.getElementById('codeInput');
     const submitButton = document.getElementById('submitButton');
     const resultDiv = document.getElementById('result');
@@ -101,16 +115,16 @@ document.addEventListener("DOMContentLoaded", function() {
     clubSelect.addEventListener('change', function() {
         const selectedClub = clubSelect.value;
         if (selectedClub === "not-in-list") {
-            resultDiv.innerHTML = "You selected 'Not in list'. Please contact support.";
-            codeLabel.style.display = 'none';
-            codeInput.style.display = 'none';
-            submitButton.style.display = 'none';
+            clubSelectContainer.style.display = 'none';
+            entriesFromNewClub();
+            // resultDiv.innerHTML = "You selected 'Not in list'. Please contact support.";
+            // codeInput.style.display = 'none';
+            // submitButton.style.display = 'none';
         } else if (selectedClub !== "") {
-            codeLabel.style.display = 'block';
             codeInput.style.display = 'block';
+            codeInput.style.padding = '1.5%'
             submitButton.style.display = 'block';
         } else {
-            codeLabel.style.display = 'none';
             codeInput.style.display = 'none';
             submitButton.style.display = 'none';
         }
@@ -123,15 +137,28 @@ document.addEventListener("DOMContentLoaded", function() {
         const club = clubData.find(club => club.clubName === selectedClub);
 
         if (club && parseInt(inputCode) === club.code) {
-            resultDiv.innerHTML = `Welcome to the next step for ${selectedClub}!`;
-            resultDiv.style.color = 'green';
-            codeLabel.style.display = 'none';
-            codeInput.style.display = 'none';
-            submitButton.style.display = 'none';
-            clubSelect.style.display = 'none';
+            clubSelectContainer.style.display = 'none';
+            entriesFromExistingClub(selectedClub);
+
+            // resultDiv.innerHTML = `Welcome to the next step for ${selectedClub}!`;
+            // resultDiv.style.color = 'green';
+            // codeInput.style.display = 'none';
+            // submitButton.style.display = 'none';
+            // clubSelect.style.display = 'none';
         } else {
-            resultDiv.innerHTML = "Incorrect code. Please try again.";
+            resultDiv.innerHTML = "もう一度";
             resultDiv.style.color = 'red';
         }
     });
 });
+
+
+function entriesFromExistingClub(selectedClub) {
+    const tempmessage = document.createElement('div');
+    tempmessage.innerHTML = `${selectedClub} was selected`
+}
+
+function entriesFromNewClub() {
+    const tempmessage = document.createElement('div');
+    tempmessage.innerHTML = `Make new club`
+}

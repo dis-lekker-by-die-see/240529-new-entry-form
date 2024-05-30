@@ -4,13 +4,73 @@
     src: url('fonts/DamaskDings1.ttf') format('truetype');
 }
 
-
-body {
-    font-family: Arial, sans-serif;
+h1, h2 {
+    margin-top: -20px;
+    text-align: center;
+    font-weight: 500;
+    color: #2b2b2b;
 }
 
-.container {
+.damask-heading {
+    margin-top: -10px;
+    font-family: 'DamaskDings';
+    font-weight: 600;
+    font-size: 3em;
+}
+
+body {
+    font-family: "Segoe UI", "Meiryo UI", sans-serif;
     margin: 20px;
+    padding: 20px;
+    background-color: #e6f2e6;
+    color: #333;
+    line-height: 1.6;
+}
+
+.mainContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background: white;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    
+}
+/*------- Select Club --------------------------------------------------------------------*/
+.clubSelectContainer {
+    display: flex;
+    width: 35%;
+    flex-direction: column; 
+    align-items: center;
+}
+.codeInput {
+    width: 100%;
+    border-radius: 8px;
+}
+.submitButton {
+    border-radius: 8px;
+}
+.codeRow {
+    display: flex;
+    flex-direction: row;
+    width: 100%; 
+    justify-content: center; 
+    margin-top: 5%;
+}
+
+.clubSelect {
+    margin-top: 5px;
+    padding: 8px;
+    font-size: 12px; /*14px*/
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+    width: 100%; 
 }
 
 .result {
@@ -18,3 +78,8 @@ body {
     font-size: 1.2em;
     color: green;
 }
+/*------- Select Club --------------------------------------------------------------------*/
+
+
+
+

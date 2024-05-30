@@ -7,25 +7,62 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="topHeaders">
+    <div class="headerContainer">
         <h2>岡山県馬術連盟</h2>
         <h1>第48回中国・四国馬術大会</h1>
         <h2>2024年5月16日 〜 2024年5月19日</h2>
         <h1 class="damask-heading">8</h1>
     </div>
+    <div class="mainContainer">
+        <!--
+            <input type="text" name="username" autocomplete="off">
+            one way to prevent browsers from autocompleting with old info.
+        -->
+
+
+
+
+        <!---------------------------------------------------------------------------------------------->
+        <div id="clubSelectContainer" class="clubSelectContainer">
+            <select id="clubSelect" class="clubSelect">
+                <option value="">乗馬クラブを選んでください</option>
+            </select>
+            <div class="codeRow">
+                <input type="text" id="codeInput" class="codeInput" style="display: none;" placeholder="パスコード" autocomplete="off">    
+                <button id="submitButton" class="submitButton" style="display: none;">Submit</button>
+            </div>
+            <div id="result" class="result"></div>
+        </div>
+        <!---------------------------------------------------------------------------------------------->
+        <div>
+            <div id="clubInfoContainer" class="clubInfoContainer" style="display: none;">
+                <!--
+                    club info is either pulled from json, or entered anew.
+                    all club inof is displayed.
+                    Note to user: this is club info in general, NOT only for this competition.
+                    club
+                    teams
+                    horses
+                    riders
+
+                    display info in rows of filled out input boxes
+                -->
+            </div>
+        </div>
     
-    <div class="container">
-        <label for="clubSelect">Select Club:</label>
-        <select id="clubSelect">
-            <option value="">Select a club</option>
-        </select>
-        <br><br>
-        <label for="codeInput" id="codeLabel" style="display: none;">Enter Code:</label>
-        <input type="text" id="codeInput" style="display: none;">
-        <br><br>
-        <button id="submitButton" style="display: none;">Submit</button>
+        <!---------------------------------------------------------------------------------------------->
+        <div>
+            <div id="entryContainer" class="entryContainer" style="display: none;">
+            <!--
+
+            -->
+            </div>
+        </div>
+    
+    
+    
     </div>
-    <div id="result" class="result"></div>
+    
     <script src="script.js"></script>
 </body>
 </html>
