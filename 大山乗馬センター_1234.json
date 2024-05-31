@@ -12,17 +12,17 @@
   ],
   "teams": [
     {
-      "teamNumber": "1",
+      "number": "1",
       "teamName": "大山乗馬センター"
     },
     {
-      "teamNumber": "2",
+      "number": "2",
       "teamName": "鳥取大学馬術部"
     }
   ],
   "horses": [
     {
-      "horseNumber": "1",
+      "number": "1",
       "horseName": "トーアレラ",
       "horseNameFurigana": "トーアレラ",
       "horseRegNumber": "60567",
@@ -34,7 +34,7 @@
       "horseOwner": "北垣"
     },
     {
-      "horseNumber": "2",
+      "number": "2",
       "horseName": "リグヴェーダ",
       "horseNameFurigana": "リグヴェーダ",
       "horseRegNumber": "58280",
@@ -46,7 +46,7 @@
       "horseOwner": "鳥取大学馬術部"
     },
     {
-      "horseNumber": "3",
+      "number": "3",
       "horseName": "カジノプレイヤー",
       "horseNameFurigana": "カジノプレイヤー",
       "horseRegNumber": "58786",
@@ -60,63 +60,63 @@
   ],
   "riders": [
     {
-      "riderNumber": "1",
+      "number": "1",
       "riderName": "北垣",
       "riderNameFurigana": "キタガキ",
       "riderRegNumber": "3679",
       "riderSex": "男子"
     },
     {
-      "riderNumber": "2",
+      "number": "2",
       "riderName": "加藤 友貴",
       "riderNameFurigana": "カトウ ユウキ",
       "riderRegNumber": "32871",
       "riderSex": "男子"
     },
     {
-      "riderNumber": "3",
+      "number": "3",
       "riderName": "吉田 桃",
       "riderNameFurigana": "ヨシダ モモ",
       "riderRegNumber": "32536",
       "riderSex": "女子"
     },
     {
-      "riderNumber": "4",
+      "number": "4",
       "riderName": "定松 優芽",
       "riderNameFurigana": "サダマツ ユメ",
       "riderRegNumber": "0",
       "riderSex": "男子"
     },
     {
-      "riderNumber": "5",
+      "number": "5",
       "riderName": "梶谷 友里奈",
       "riderNameFurigana": "カジタニ ユリナ",
       "riderRegNumber": "32891",
       "riderSex": "女子"
     },
     {
-      "riderNumber": "6",
+      "number": "6",
       "riderName": "武田 明日華",
       "riderNameFurigana": "タケダ アスカ",
       "riderRegNumber": "32510",
       "riderSex": "女子"
     },
     {
-      "riderNumber": "7",
+      "number": "7",
       "riderName": "岡部 楓",
       "riderNameFurigana": "オカベ カエデ",
       "riderRegNumber": "0",
       "riderSex": "女子"
     },
     {
-      "riderNumber": "8",
+      "number": "8",
       "riderName": "茜 知樹",
       "riderNameFurigana": "アカネ トモキ",
       "riderRegNumber": "0",
       "riderSex": "男子"
     },
     {
-      "riderNumber": "9",
+      "number": "9",
       "riderName": "和食 文子",
       "riderNameFurigana": "ワジキ アヤネ",
       "riderRegNumber": "0",

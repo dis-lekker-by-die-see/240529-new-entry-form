@@ -112,7 +112,7 @@ async function fetchAndParseJSON(file) {
 
 
 
-
+////////////////////////////
 function displayClub(club) {
     const tableContainer = document.getElementById('clubTableContainer');
     let tableHTML = `<table><tr><th>団体名</th><th>申込責任者</th><th>携帯</th><th>電話</th><th>email</th><th>FAX</th><th>住所</th></tr>`;
@@ -131,19 +131,21 @@ function displayClub(club) {
     tableContainer.innerHTML = tableHTML;
     tableContainer.style.display = 'block';
 }
-
+//////////////////////////////
 function displayTeams(teams) {
+    //let rowNum = 0;
     const tableContainer = document.getElementById('teamsTableContainer');
     let tableHTML = `<table><tr><th>番</th><th>所属名</th><th>Action</th></tr>`;
     teams.forEach(t => {
+        //rowNum += 1;
         tableHTML += `<tr>
-            <td>${t.teamNumber}</td>
+            <td>${t.number}</td>
             <td contenteditable="true">${t.teamName}</td>
             <td><button class="deleteRow"> X </button></td>
         </tr>`;
     });
-        tableHTML += `</table>`;
-    tableHTML += `<button id="addTeamRow" class="addRowButton" data-container-id="teamsTableContainer" data-headers="Team Number,Team Name">Add Row</button>`;
+    tableHTML += `</table>`;
+    tableHTML += `<button id="addTeamRow" class="addRowButton" data-new-row-number="${teams.length + 1}" data-container-id="teamsTableContainer" data-headers="Number,Team Name">Add Row</button>`;
     tableContainer.innerHTML = tableHTML;
     tableContainer.style.display = 'block';
 
@@ -152,13 +154,13 @@ function displayTeams(teams) {
         button.addEventListener('click', deleteRow);
     });
 }
-
+////////////////////////////////
 function displayHorses(horses) {
     const tableContainer = document.getElementById('horsesTableContainer');
     let tableHTML = `<table><tr><th>番</th><th>馬名</th><th>フリガナ</th><th>登録番号</th><th>性別</th><th>年齢</th><th>毛色</th><th>品種</th><th>産地</th><th>所有者</th><th>Action</th></tr>`;
     horses.forEach(h => {
         tableHTML += `<tr>
-            <td>${h.horseNumber}</td>
+            <td>${h.number}</td>
             <td contenteditable="true">${h.horseName}</td>
             <td contenteditable="true">${h.horseNameFurigana}</td>
             <td contenteditable="true">${h.horseRegNumber}</td>
@@ -172,7 +174,7 @@ function displayHorses(horses) {
         </tr>`;
     });
     tableHTML += `</table>`;
-    tableHTML += `<button id="addHorseRow" class="addRowButton" data-container-id="horsesTableContainer" data-headers="Horse Number,Horse Name,Horse Name Furigana,Horse Reg Number,Horse Sex,Horse Age,Horse Color,Horse Breed,Horse Origin,Horse Owner">Add Row</button>`;
+    tableHTML += `<button id="addHorseRow" class="addRowButton" data-new-row-number="${horses.length + 1}" data-container-id="horsesTableContainer" data-headers="Number,Horse Name,Horse Name Furigana,Horse Reg Number,Horse Sex,Horse Age,Horse Color,Horse Breed,Horse Origin,Horse Owner">Add Row</button>`;
     tableContainer.innerHTML = tableHTML;
     tableContainer.style.display = 'block';
 
@@ -181,13 +183,13 @@ function displayHorses(horses) {
         button.addEventListener('click', deleteRow);
     });
 }
-
+////////////////////////////////
 function displayRiders(riders) {
     const tableContainer = document.getElementById('ridersTableContainer');
     let tableHTML = `<table><tr><th>番</th><th>選手名</th><th>フリガナ</th><th>登録番号</th><th>性別</th><th>Action</th></tr>`;
     riders.forEach(r => {
         tableHTML += `<tr>
-            <td>${r.riderNumber}</td>
+            <td>${r.number}</td>
             <td contenteditable="true">${r.riderName}</td>
             <td contenteditable="true">${r.riderNameFurigana}</td>
             <td contenteditable="true">${r.riderRegNumber}</td>
@@ -196,7 +198,7 @@ function displayRiders(riders) {
         </tr>`;
     });
     tableHTML += `</table>`;
-    tableHTML += `<button id="addRiderRow" class="addRowButton" data-container-id="ridersTableContainer" data-headers="Rider Number,Rider Name,Rider Name Furigana,Rider Reg Number,Rider Sex">Add Row</button>`;
+    tableHTML += `<button id="addRiderRow" class="addRowButton" data-new-row-number="${riders.length + 1}" data-container-id="ridersTableContainer" data-headers="Number,Rider Name,Rider Name Furigana,Rider Reg Number,Rider Sex">Add Row</button>`;
     tableContainer.innerHTML = tableHTML;
     tableContainer.style.display = 'block';
 
@@ -211,9 +213,10 @@ function deleteRow(event) {
 }
 
 function handleAddRow(event) {
+    const newRowNumber =  event.target.getAttribute('data-new-row-number');
     const containerId = event.target.getAttribute('data-container-id');
     const headers = event.target.getAttribute('data-headers').split(',');
-    addRow(containerId, headers);
+    addRow(newRowNumber, containerId, headers);
 }
 
 // function addRow(containerId, headers) {
@@ -257,28 +260,101 @@ function validateRow(row) {
 
 //////////////////////////////////////////////////////////////////////////////////
 //          [Update Button] at bottom of Tables 
+
+
+
+
 document.getElementById('updateButton').addEventListener('click', function() {
     const tableContainers = ['clubTableContainer', 'teamsTableContainer', 'horsesTableContainer', 'ridersTableContainer'];
     const updatedData = {};
+    let isEmptyTable = false;
 
     tableContainers.forEach(containerId => {
         const table = document.getElementById(containerId).querySelector('table');
         const headers = Array.from(table.rows[0].cells).map(cell => cell.textContent);
-        const rows = Array.from(table.rows).slice(1);
+        const rows = Array.from(table.rows).slice(1); // Skip the header row
+
         const data = rows.map(row => {
             const cells = Array.from(row.cells);
             return cells.reduce((obj, cell, index) => {
-                obj[headers[index]] = cell.textContent;
+                obj[headers[index]] = cell.textContent.trim();
                 return obj;
             }, {});
-        });
+        }).filter(row => !Object.values(row).some(value => value === ''));
 
-        updatedData[containerId] = data;
+        
+        if (data.length === 0) {
+            isEmptyTable = true;
+        } else {
+            updatedData[containerId] = data;
+        }
     });
 
-    console.log('Updated Data:', updatedData);
-    // Here you can send updatedData to your server or process it further
+    if (isEmptyTable) {
+        const userChoice = confirm("One or more tables have no valid data rows. Click 'Cancel' to go back and edit, or 'OK' to reload the page.");
+        if (userChoice) {
+            window.location.reload(); // Reload the page
+        } else {
+            return; // User chose to go back and edit, stop the update process.
+        }
+    } else {
+        console.log('Updated Data:', updatedData);
+
+
+
+        
+    }
 });
+
+
+
+// document.getElementById('updateButton').addEventListener('click', function() {
+//     const tableContainers = ['clubTableContainer', 'teamsTableContainer', 'horsesTableContainer', 'ridersTableContainer'];
+//     const updatedData = {};
+
+//     tableContainers.forEach(containerId => {
+//         const table = document.getElementById(containerId).querySelector('table');
+//         const headers = Array.from(table.rows[0].cells).map(cell => cell.textContent);
+//         const rows = Array.from(table.rows).slice(1); // Skip the header row
+
+//         const data = rows.map(row => {
+//             const cells = Array.from(row.cells);
+//             return cells.reduce((obj, cell, index) => {
+//                 obj[headers[index]] = cell.textContent.trim(); // Trim to avoid white spaces being considered as content
+//                 return obj;
+//             }, {});
+//         }).filter(row => {
+//             // Filter out any rows that have at least one empty cell
+//             return !Object.values(row).some(value => value === '');
+//         });
+
+//         updatedData[containerId] = data;
+//     });
+
+//     console.log('Updated Data:', updatedData);
+// });
+
+
+
+// document.getElementById('updateButton').addEventListener('click', function() {
+//     const tableContainers = ['clubTableContainer', 'teamsTableContainer', 'horsesTableContainer', 'ridersTableContainer'];
+//     const updatedData = {};
+
+//     tableContainers.forEach(containerId => {
+//         const table = document.getElementById(containerId).querySelector('table');
+//         const headers = Array.from(table.rows[0].cells).map(cell => cell.textContent);
+//         const rows = Array.from(table.rows).slice(1);
+//         const data = rows.map(row => {
+//             const cells = Array.from(row.cells);
+//             return cells.reduce((obj, cell, index) => {
+//                     obj[headers[index]] = cell.textContent;
+//                     return obj;
+//             }, {});
+//         });
+//         updatedData[containerId] = data;
+//     });
+//     console.log('Updated Data:', updatedData);
+// });
 
 
 
@@ -329,7 +405,7 @@ document.getElementById('updateButton').addEventListener('click', function() {
 //     let tableHTML = `<table><tr><th>Team Number</th><th>Team Name</th><th>Action</th></tr>`;
 //     teams.forEach(t => {
 //         tableHTML += `<tr>
-//             <td contenteditable="true">${t.teamNumber}</td>
+//             <td contenteditable="true">${t.number}</td>
 //             <td contenteditable="true">${t.teamName}</td>
 //             <td><button class="deleteRow"> X </button></td>
 //         </tr>`;
@@ -350,7 +426,7 @@ document.getElementById('updateButton').addEventListener('click', function() {
 //     let tableHTML = `<table><tr><th>Horse Number</th><th>Horse Name</th><th>Horse Name Furigana</th><th>Horse Reg Number</th><th>Horse Sex</th><th>Horse Age</th><th>Horse Color</th><th>Horse Breed</th><th>Horse Origin</th><th>Horse Owner</th><th>Action</th></tr>`;
 //     horses.forEach(h => {
 //         tableHTML += `<tr>
-//             <td contenteditable="true">${h.horseNumber}</td>
+//             <td contenteditable="true">${h.number}</td>
 //             <td contenteditable="true">${h.horseName}</td>
 //             <td contenteditable="true">${h.horseNameFurigana}</td>
 //             <td contenteditable="true">${h.horseRegNumber}</td>
@@ -379,7 +455,7 @@ document.getElementById('updateButton').addEventListener('click', function() {
 //     let tableHTML = `<table><tr><th>Rider Number</th><th>Rider Name</th><th>Rider Name Furigana</th><th>Rider Reg Number</th><th>Rider Sex</th><th>Action</th></tr>`;
 //     riders.forEach(r => {
 //         tableHTML += `<tr>
-//             <td contenteditable="true">${r.riderNumber}</td>
+//             <td contenteditable="true">${r.number}</td>
 //             <td contenteditable="true">${r.riderName}</td>
 //             <td contenteditable="true">${r.riderNameFurigana}</td>
 //             <td contenteditable="true">${r.riderRegNumber}</td>
@@ -404,14 +480,16 @@ document.getElementById('updateButton').addEventListener('click', function() {
 //     addRow(containerId, headers);
 // }
 
-function addRow(containerId, headers) {
+function addRow(newRowNumber, containerId, headers) {
     const tableContainer = document.getElementById(containerId);
     const table = tableContainer.querySelector('table');
     const newRow = document.createElement('tr');
     
     headers.forEach(header => {
         let newCell = document.createElement('td');
-        if (header === 'Rider Sex') {
+        if (header === 'Number') {
+            newCell.innerHTML = `${newRowNumber}`
+        } else if (header === 'Rider Sex') {
             newCell.innerHTML = `<select class="riderSex" required>
                                     <option value="" disabled selected>性別</option>
                                     <option value="男子">男子</option>
@@ -436,6 +514,7 @@ function addRow(containerId, headers) {
             addButton.textContent = 'Add Row';
             addButton.addEventListener('click', handleAddRow);
         } else {
+            //if (!input.value.trim()) {
             alert('Please fill in all cells.');
         }
     });
