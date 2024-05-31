@@ -5,9 +5,13 @@
 // const currentTimestampInSeconds = Math.floor(Date.now() / 1000);
 // console.log(currentTimestampInSeconds); // Example output: 1653498845
 
-
-//*///////////////////////////////////////////////////////////////////////////////////////////////////////
 let clubSelected = false;
+let wasNewClubOptionSelected = false;
+let clubNewRowNumber = 0;
+let teamsNewRowNumber = 0;
+let horsesNewRowNumber = 0;
+let ridersNewRowNumber = 0;
+//*///////////////////////////////////////////////////////////////////////////////////////////////////////
 document.addEventListener("DOMContentLoaded", function() {
     fetch('json_files_list.json')
         .then(response => response.json())
@@ -45,10 +49,11 @@ function processClubSelection(clubData) {
         const selectedClub = clubSelect.value;
         if (selectedClub === "new-club") {
             
-            
             clubSelectContainer.style.display = 'none';
-            
-            ///????
+            const clubInfoContainer = document.getElementById('clubInfoContainer');
+            clubInfoContainer.style.display = 'block';
+            fetchAndParseJSON('/dummy.json', false);
+            wasNewClubOptionSelected = true;
 
         } else if (selectedClub !== "") {
             codeInput.style.display = 'block';
@@ -69,7 +74,7 @@ function processClubSelection(clubData) {
             const clubInfoContainer = document.getElementById('clubInfoContainer');
             clubInfoContainer.style.display = 'block';
 
-            fetchAndParseJSON(club.fileName);
+            fetchAndParseJSON(club.fileName, true);
 
         } else {
             codeInput.style.border = '2px solid red';
@@ -81,7 +86,7 @@ function processClubSelection(clubData) {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 //              Read data
-async function fetchAndParseJSON(file) {
+async function fetchAndParseJSON(file, canEdit) {
     try {
         const response = await fetch(file);
         if (!response.ok) {
@@ -89,17 +94,24 @@ async function fetchAndParseJSON(file) {
         }
         const data = await response.json();
         console.log('JSON Data:', data);
+        
         // Extract necessary information
         const club = data.club;
         const teams = data.teams;
         const horses = data.horses;
         const riders = data.riders;
-
-        // Call functions to display data in tables
-        displayClub(club, true);
-        displayTeams(teams, true);
-        displayHorses(horses, true);
-        displayRiders(riders, true);
+        if (canEdit){
+            // Call functions to display data in tables
+            displayClub(club, true);
+            displayTeams(teams, true);
+            displayHorses(horses, true);
+            displayRiders(riders, true);
+        } else {
+            displayClub(club, false);
+            displayTeams(teams, false);
+            displayHorses(horses, false);
+            displayRiders(riders, false);
+        }
     } catch (error) {
         console.error('Error fetching or parsing the JSON file:', error);
     }
@@ -109,7 +121,7 @@ async function fetchAndParseJSON(file) {
 //          Display Tables 
 function displayClub(club, canEdit) {
     const tableContainer = document.getElementById('clubTableContainer');
-    let tableHTML = `<table><tr><th>団体名</th><th>申込責任者</th><th>携帯</th><th>電話</th><th>email</th><th>FAX</th><th>住所</th></tr>`;
+    let tableHTML = `<h4>団体 / Organization</h4><table><tr><th>団体名</th><th>申込責任者</th><th>携帯</th><th>電話</th><th>email</th><th>FAX</th><th>住所</th></tr>`;
     club.forEach(c => {
         tableHTML += `<tr>
             <td>${c.clubName}</td>
@@ -120,15 +132,46 @@ function displayClub(club, canEdit) {
             <td contenteditable="${canEdit}">${c.fax}</td>
             <td>${c.address}</td>
         </tr>`;
+        //clubNewRowNumber = 1;
     });
     tableHTML += `</table>`;
+    tableHTML += `<button style="display: none;" id="addClubRow" class="addRowButton" data-new-row-number="${clubNewRowNumber}" data-container-id="clubTableContainer" data-headers="1,2,3,4,5,6,7">追加</button>`; //
     tableContainer.innerHTML = tableHTML;
     tableContainer.style.display = 'block';
+    if (wasNewClubOptionSelected && clubNewRowNumber === 0) {
+        document.getElementById('addClubRow').style.display = 'block';
+    } 
+    // const newRowClick = document.getElementById('addClubRow');
+    //newRowClick.addEventListener('click', handleAddRow);
+    //document.getElementById('addClubRow').addEventListener('click', handleAddRow);
+    //newRowClick.addEventListener('click', function() {
+    document.getElementById('addClubRow').addEventListener('click', (event) => {
+        clubNewRowNumber += 1;
+        
+        // if (clubNewRowNumber > 1) {
+        //     document.getElementById('addClubRow').style.display = 'none';
+        // } else {
+        //     handleAddRow(event);
+        // }
+        if (clubNewRowNumber < 2) {
+            console.log(clubNewRowNumber);
+            //handleAddRow(event);
+        
+
+
+        const newRowNumber =  document.getElementById('addClubRow').getAttribute('data-new-row-number');
+        const containerId = document.getElementById('addClubRow').getAttribute('data-container-id');
+        const headers = document.getElementById('addClubRow').getAttribute('data-headers').split(',');
+        addRow(newRowNumber, containerId, headers);
+        }
+
+    });
+    
 }
 ///////////////////////////////////////
 function displayTeams(teams, canEdit) {
     const tableContainer = document.getElementById('teamsTableContainer');
-    let tableHTML = `<table><tr><th>番</th><th>所属名</th>`;
+    let tableHTML = `<h4>所属 / Teams</h4><table><tr><th>番</th><th>所属名</th>`;
     if (canEdit) {
         tableHTML += `<th>削除</th></tr>`;
     } else {
@@ -143,9 +186,10 @@ function displayTeams(teams, canEdit) {
         }else {
             tableHTML += `</tr>`;
         }
+        newRowNumber = +t.number + 1;
     });
     tableHTML += `</table>`;
-    tableHTML += `<button id="addTeamRow" class="addRowButton" data-new-row-number="${teams.length + 1}" data-container-id="teamsTableContainer" data-headers="Number,Team Name">Add Row</button>`;
+    tableHTML += `<button id="addTeamRow" class="addRowButton" data-new-row-number="${teams.length + 1}" data-container-id="teamsTableContainer" data-headers="Number,Team Name">追加</button>`;
     tableContainer.innerHTML = tableHTML;
     tableContainer.style.display = 'block';
 
@@ -156,8 +200,9 @@ function displayTeams(teams, canEdit) {
 }
 /////////////////////////////////////////
 function displayHorses(horses, canEdit) {
+    let newRowNumber = 0;
     const tableContainer = document.getElementById('horsesTableContainer');
-    let tableHTML = `<table><tr><th>番</th><th>馬名</th><th>フリガナ</th><th>登録番号</th><th>性別</th><th>年齢</th><th>毛色</th><th>品種</th><th>産地</th><th>所有者</th>`;
+    let tableHTML = `<h4>馬 / Horses</h4><table><tr><th>番</th><th>馬名</th><th>フリガナ</th><th>登録番号</th><th>性別</th><th>年齢</th><th>毛色</th><th>品種</th><th>産地</th><th>所有者</th>`;
     if (canEdit) {
         tableHTML += `<th>削除</th></tr>`;
     } else {
@@ -180,9 +225,10 @@ function displayHorses(horses, canEdit) {
         }else {
             tableHTML += `</tr>`;
         }
+        newRowNumber = +h.number + 1;
     });
     tableHTML += `</table>`;
-    tableHTML += `<button id="addHorseRow" class="addRowButton" data-new-row-number="${horses.length + 1}" data-container-id="horsesTableContainer" data-headers="Number,Horse Name,Horse Name Furigana,Horse Reg Number,Horse Sex,Horse Age,Horse Color,Horse Breed,Horse Origin,Horse Owner">Add Row</button>`;
+    tableHTML += `<button id="addHorseRow" class="addRowButton" data-new-row-number="${newRowNumber}" data-container-id="horsesTableContainer" data-headers="Number,Horse Name,Horse Name Furigana,Horse Reg Number,Horse Sex,Horse Age,Horse Color,Horse Breed,Horse Origin,Horse Owner">追加</button>`;
     tableContainer.innerHTML = tableHTML;
     tableContainer.style.display = 'block';
 
@@ -193,8 +239,9 @@ function displayHorses(horses, canEdit) {
 }
 /////////////////////////////////////////
 function displayRiders(riders, canEdit) {
+    let newRowNumber = 0;
     const tableContainer = document.getElementById('ridersTableContainer');
-    let tableHTML = `<table><tr><th>番</th><th>選手名</th><th>フリガナ</th><th>登録番号</th><th>性別</th>`;
+    let tableHTML = `<h4>選手 / Riders</h4><table><tr><th>番</th><th>選手名</th><th>フリガナ</th><th>登録番号</th><th>性別</th>`;
     if (canEdit) {
         tableHTML += `<th>削除</th></tr>`;
     } else {
@@ -212,9 +259,10 @@ function displayRiders(riders, canEdit) {
         }else {
             tableHTML += `</tr>`;
         }
+        newRowNumber = +r.number + 1;
     });
     tableHTML += `</table>`;
-    tableHTML += `<button id="addRiderRow" class="addRowButton" data-new-row-number="${riders.length + 1}" data-container-id="ridersTableContainer" data-headers="Number,Rider Name,Rider Name Furigana,Rider Reg Number,Rider Sex">Add Row</button>`;
+    tableHTML += `<button id="addRiderRow" class="addRowButton" data-new-row-number="${newRowNumber}" data-container-id="ridersTableContainer" data-headers="Number,Rider Name,Rider Name Furigana,Rider Reg Number,Rider Sex">追加</button>`;
     tableContainer.innerHTML = tableHTML;
     tableContainer.style.display = 'block';
 
@@ -224,7 +272,7 @@ function displayRiders(riders, canEdit) {
     });
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//          [Add Row] & [ X ] table buttons
+//          [追加] & [ X ] table buttons
 
 function deleteRow(event) {
     const row = event.target.closest('tr');
@@ -232,10 +280,13 @@ function deleteRow(event) {
 }
 //////////////////////////////
 function handleAddRow(event) {
-    const newRowNumber =  event.target.getAttribute('data-new-row-number');
-    const containerId = event.target.getAttribute('data-container-id');
-    const headers = event.target.getAttribute('data-headers').split(',');
-    addRow(newRowNumber, containerId, headers);
+    //console.log('handleAddRow1');
+    // const newRowNumber =  event.target.getAttribute('data-new-row-number');
+    // console.log('handleAddRow2');
+    // const containerId = event.target.getAttribute('data-container-id');
+    // console.log('handleAddRow3');
+    // const headers = event.target.getAttribute('data-headers').split(',');
+    //addRow(newRowNumber, containerId, headers); //
 }
 ///////////////////////////
 function validateRow(row) {
@@ -248,7 +299,7 @@ function validateRow(row) {
     return true;
 }
 /////////////////////////////////////////////////////
-function addRow(newRowNumber, containerId, headers) {
+function addRow(newRowNumber, containerId, headers) { //
     const tableContainer = document.getElementById(containerId);
     const table = tableContainer.querySelector('table');
     const newRow = document.createElement('tr');
@@ -280,8 +331,8 @@ function addRow(newRowNumber, containerId, headers) {
         } else if (header === 'Rider Sex') {
             newCell.innerHTML = `<select class="riderSex" required>
                                     <option value="" disabled selected>性別</option>
-                                    <option value="男子">男子</option>
                                     <option value="女子">女子</option>
+                                    <option value="男子">男子</option>
                                 </select>`;
         } else {
             newCell.setAttribute('contenteditable', 'true');
@@ -290,13 +341,13 @@ function addRow(newRowNumber, containerId, headers) {
     });
     table.appendChild(newRow);
 
-    // Change the 'Add Row' button to 'Update Table'
+    // Change the '追加' button to 'Update Table'
     const addButton = tableContainer.querySelector('.addRowButton');
-    addButton.textContent = 'Update Table';
+    addButton.textContent = '更新';
     addButton.removeEventListener('click', handleAddRow);
     addButton.addEventListener('click', () => {
         if (validateRow(newRow)) {
-            addButton.textContent = 'Add Row';
+            addButton.textContent = '追加';
             addButton.addEventListener('click', handleAddRow);
         } else {
             alert('Please fill in all cells.');
@@ -349,9 +400,19 @@ document.getElementById('updateButton').addEventListener('click', function() {
             ]
         }
         const table = document.getElementById(containerId).querySelector('table');
-        const rows = Array.from(table.rows).slice(1); // Skip the header row
+        let rows = [];
+        if (wasNewClubOptionSelected) {
+            rows = Array.from(table.rows).slice(2); // Skip the header row
+        } else {
+            rows = Array.from(table.rows).slice(1); // Skip the header row
+        }
+        let cells = []; 
         const data = rows.map(row => {
-            const cells = Array.from(row.cells).slice(0, -1); // Exclude the last cell of each row
+            if (wasNewClubOptionSelected) {
+                cells = Array.from(row.cells); // Exclude the last cell of each row            
+            } else {
+                cells = Array.from(row.cells).slice(0, -1); // Exclude the last cell of each row
+            }
             return cells.reduce((obj, cell, index) => {
                 obj[headers[index]] = cell.textContent.trim();
                 return obj;
