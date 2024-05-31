@@ -53,6 +53,7 @@ body {
     padding: 5px;
 }
 .submitButton {
+    min-width: 80px;
     border-radius: 8px;
 }
 .codeRow {

@@ -27,6 +27,11 @@ function processClubSelection(clubData) {
     const submitButton = document.getElementById('submitButton');
     const resultDiv = document.getElementById('result');
 
+    // Add new club option
+    const newClubRecord = document.createElement('option');
+    newClubRecord.value = "new-club";
+    newClubRecord.textContent = ">>新登録<<";
+    clubSelect.appendChild(newClubRecord);
     // Populate the select element with club names
     clubData.forEach(club => {
         const option = document.createElement('option'); // <option value="">Select a club</option>
@@ -35,16 +40,10 @@ function processClubSelection(clubData) {
         clubSelect.appendChild(option); // <select id="clubSelect">
     });
 
-    // Add 'not in list' option
-    const notInListOption = document.createElement('option');
-    notInListOption.value = "not-in-list";
-    notInListOption.textContent = "Not in list";
-    clubSelect.appendChild(notInListOption);
-
     // Event listener for club selection
     clubSelect.addEventListener('change', function() {
         const selectedClub = clubSelect.value;
-        if (selectedClub === "not-in-list") {
+        if (selectedClub === "new-club") {
             
             
             clubSelectContainer.style.display = 'none';
@@ -73,13 +72,14 @@ function processClubSelection(clubData) {
             fetchAndParseJSON(club.fileName);
 
         } else {
-            resultDiv.innerHTML = "もう一度";
-            resultDiv.style.color = 'red';
+            codeInput.style.border = '2px solid red';
+            //resultDiv.innerHTML = "もう一度";
+            //resultDiv.style.color = 'red';
         }
     });
 }
 
-///////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 //              Read data
 async function fetchAndParseJSON(file) {
     try {
@@ -88,7 +88,6 @@ async function fetchAndParseJSON(file) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-
         console.log('JSON Data:', data);
         // Extract necessary information
         const club = data.club;
@@ -353,7 +352,6 @@ document.getElementById('updateButton').addEventListener('click', function() {
         const rows = Array.from(table.rows).slice(1); // Skip the header row
         const data = rows.map(row => {
             const cells = Array.from(row.cells).slice(0, -1); // Exclude the last cell of each row
-            //console.log(cells);
             return cells.reduce((obj, cell, index) => {
                 obj[headers[index]] = cell.textContent.trim();
                 return obj;
