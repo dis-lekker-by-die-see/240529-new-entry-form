@@ -352,7 +352,8 @@ document.getElementById('updateButton').addEventListener('click', function() {
         const table = document.getElementById(containerId).querySelector('table');
         const rows = Array.from(table.rows).slice(1); // Skip the header row
         const data = rows.map(row => {
-            const cells = Array.from(row.cells);
+            const cells = Array.from(row.cells).slice(0, -1); // Exclude the last cell of each row
+            //console.log(cells);
             return cells.reduce((obj, cell, index) => {
                 obj[headers[index]] = cell.textContent.trim();
                 return obj;
