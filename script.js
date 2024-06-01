@@ -7,7 +7,7 @@
 
 let clubSelected = false;
 let wasNewClubOptionSelected = false;
-let newRowNumbers = { club: 0, teams: 0, horses: 0, riders: 0 };
+let newRowNumbers = { club: 0, teams: 0, horses: 0, riders: 0, entries: 0 };
 //*///////////////////////////////////////////////////////////////////////////////////////////////////////
 document.addEventListener("DOMContentLoaded", function() {
     fetch('json_files_list.json')
@@ -47,10 +47,10 @@ function processClubSelection(clubData) {
         } else if (selectedClub !== "") {
             codeInput.style.display = 'block';
             submitButton.style.display = 'block';
-        } else {
-            codeInput.style.display = 'none';
-            submitButton.style.display = 'none';
-        }
+        } //else {
+        //     codeInput.style.display = 'block'; //'none';
+        //     submitButton.style.display = 'none';
+        // }
     });
     submitButton.addEventListener('click', function() {
         const selectedClub = clubSelect.value;
@@ -221,7 +221,6 @@ function displayHorses(horses, canEdit) {
 }
 /////////////////////////////////////////
 function displayRiders(riders, canEdit) {
-    let newRowNumber = 0;
     const tableContainer = document.getElementById('ridersTableContainer');
     let tableHTML = `<h4>選手 / Riders</h4><table><tr><th>番</th><th>選手名</th><th>フリガナ</th><th>登録番号</th><th>性別</th>`;
     if (canEdit) {
@@ -251,6 +250,40 @@ function displayRiders(riders, canEdit) {
         button.addEventListener('click', deleteRow);
     });
     document.getElementById('addRiderRow').addEventListener('click', handleAddRow);
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//          Entries 
+function displayEntries(updatedData, canEdit) {
+    const tableContainer = document.getElementById('entriesTableContainer');
+
+
+    let tableHTML = `<h2>Entries</h2>`
+    tableHTML += `<table><tr><th>番</th><th>所属</th><th>競技番号</th><th>日付</th><th>種目名</th><th>競技名</th><th>選手名</th><th>選手登録番号</th><th>馬名</th><th>馬登録番号</th><th>区分</th><th>エントリー料</th><th>備考</th>`;
+    tableHTML += `</tr>`;
+    
+    // entries.forEach(r => {
+    //     tableHTML += `<tr>
+    //         <td>${r.number}</td>
+    //         <td contenteditable="${canEdit}">${r.riderName}</td>
+    //         <td contenteditable="${canEdit}">${r.riderNameFurigana}</td>
+    //         <td contenteditable="${canEdit}">${r.riderRegNumber}</td>
+    //         <td contenteditable="${canEdit}">${r.riderSex}</td>`;
+    //     if (canEdit) {
+    //         tableHTML += `<td><button class="deleteRow"> X </button></td></tr>`;
+    //     }else {
+    //         tableHTML += `</tr>`;
+    //     }
+    //     newRowNumbers.riders = +r.number + 1;
+    // });
+
+    tableHTML += `</table>`;
+    tableHTML += `<button id="addEntryRow" class="addRowButton" data-new-row-number="${newRowNumbers.entries}" data-container-id="entriesTableContainer" data-headers="Number,teamName,scheduleNumber,scheduleDate,category,eventCode,eventName,priceCode,riderName,riderRegNumber,horseName,horseRegNumber,comment">追加</button>`;
+    tableContainer.innerHTML = tableHTML;
+    tableContainer.style.display = 'block';
+    Array.from(document.getElementsByClassName('deleteRow')).forEach(button => {
+        button.addEventListener('click', deleteRow);
+    });
+    document.getElementById('addEntryRow').addEventListener('click', handleAddRow);
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //          [追加] & [ X ] table buttons
@@ -457,7 +490,9 @@ document.getElementById('updateButton').addEventListener('click', function() {
         // displayTeams(teams);
         // displayHorses(horses);
         // displayRiders(riders);
-
+        const entriesContainer = document.getElementById('entriesContainer');
+        entriesContainer.style.display = 'block';
+        displayEntries(updatedData, true);
 
     }
 });
