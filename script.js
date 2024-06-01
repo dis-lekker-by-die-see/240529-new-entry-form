@@ -28,7 +28,7 @@ function processClubSelection(clubData) {
     const newClubRecord = document.createElement('option');
 
     newClubRecord.value = "new-club";
-    newClubRecord.textContent = ">>新登録<<";
+    newClubRecord.textContent = "- - 新登録 - -";
     clubSelect.appendChild(newClubRecord);
     clubData.forEach(club => {
         const option = document.createElement('option'); // <option value="">Select a club</option>
@@ -104,7 +104,29 @@ async function fetchAndParseJSON(file, canEdit) {
 //          Display Tables 
 function displayClub(club, canEdit) {
     const tableContainer = document.getElementById('clubTableContainer');
-    let tableHTML = `<h4>団体 / Organization</h4><table><tr><th>団体名</th><th>申込責任者</th><th>携帯</th><th>電話</th><th>email</th><th>FAX</th><th>住所</th></tr>`;
+    let tableHTML = `<h2>団体・乗馬クラブ / Organization・Riding Club</h2>`;
+    if (wasNewClubOptionSelected) {
+        tableHTML += `<p>
+        下記のフォームを使用して、クラブの詳細、チーム、馬、選手を追加してください。
+        <br>
+        注意：新しいデータはここには保存されません。このフォームは、ダウンロード可能なファイルを生成し、そのファイルをメールで協会に送信する必要があります。
+        <br>
+        重要：ページをリフレッシュまたは再読み込みすると、すべての変更と新しいデータが失われます。
+        </p>`;
+    } else {
+        tableHTML += `<p>
+        以下は、岡山県馬術連盟が保有するクラブ情報の記録です。
+        クラブ情報を最新の状態に保つために、下記のフォームを使用して更新してください。
+        クラブ名と住所はここでは変更できません。
+        チーム(所属)、馬、選手の追加や削除が可能です。
+        この競技に参加しないチーム、馬、選手を削除する必要はありません。
+        <br>
+        注意：新しいデータや以下のデータの更新はここには保存されません。このフォームは、ダウンロード可能なファイルを生成し、そのファイルをメールで連盟に送信する必要があります。
+        <br>
+        重要：ページをリフレッシュまたは再読み込みすると、すべての変更と新しいデータが失われます。
+        </p>`;
+    }
+    tableHTML += `<table><tr><th>団体名</th><th>申込責任者</th><th>携帯</th><th>電話</th><th>email</th><th>FAX</th><th>住所</th></tr>`;
     club.forEach(c => {
         tableHTML += `<tr>
             <td>${c.clubName}</td>
@@ -128,7 +150,13 @@ function displayClub(club, canEdit) {
 ///////////////////////////////////////
 function displayTeams(teams, canEdit) {
     const tableContainer = document.getElementById('teamsTableContainer');
-    let tableHTML = `<h4>所属 / Teams</h4><table><tr><th>番</th><th>所属名</th>`;
+    let tableHTML = `<h4>チーム(所属) / Teams</h4>`;
+    tableHTML += `<p>
+        いくつかの団体・乗馬クラブには複数の所属・チームがあります。例えば、(団体) 蒜山ホースパーク >> (所属) 蒜山ホースパーク、(団体) 蒜山ホースパーク >> (所属) 真庭市スポーツ少年団。
+        <br>
+        所属名・チームが団体名・乗馬クラブと同じ場合は、ここに団体名をもう一度追加してください。
+        </p>`;
+    tableHTML += `<table><tr><th>番</th><th>所属名</th>`;
     if (canEdit) {
         tableHTML += `<th>削除</th></tr>`;
     } else {

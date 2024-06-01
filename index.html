@@ -27,34 +27,35 @@
         <!---------------------------------------------------------------------------------------------->
         <div id="clubSelectContainer" class="clubSelectContainer">
             <select id="clubSelect" class="clubSelect">
-                <option value="">乗馬クラブを選んでください</option>
+                <option value="">団体・乗馬クラブを選んでください</option>
             </select>
             <div class="codeRow">
                 <input type="text" id="codeInput" class="codeInput" style="display: none;" placeholder="パスコード" autocomplete="off">    
                 <button id="submitButton" class="submitButton" style="display: none;">入力</button>
             </div>
-            <div id="result" class="result"></div>
+            <div class="selectClubExplanation">
+                <p>
+                    競技申込責任者専用です。
+                    <br>
+                    団体・乗馬クラブがすでにリストにある場合は、[- - 新登録 - -]を選択しないでください。
+                    <br>
+                    パスコードを忘れた場合は、岡山県馬術連盟の (?????????さん・担当 )   に連絡してください。
+                </p>
+            </div>
+            <!--<div id="result" class="result"></div>
+            -->
         </div>
         <!---------------------------------------------------------------------------------------------->
         <div>
             <div id="clubInfoContainer" class="clubInfoContainer" style="display: none;">
-                <!--
-                    club info is either pulled from json, or entered anew.
-                    all club info is displayed.
-                    Note to user: this is club info in general, NOT only for this competition.
-                    club
-                    teams
-                    horses
-                    riders
-
-                    display info in rows of filled out input boxes
-                -->
-    
+                
+                
                 <div id="clubTableContainer" class="table-container"></div>
                 <div id="teamsTableContainer" class="table-container"></div>
                 <div id="horsesTableContainer" class="table-container"></div>
                 <div id="ridersTableContainer" class="table-container"></div>
                 <hr>
+                
                 <button id="updateButton">エントリーに進む</button>
                 <span> ＊上記の情報確認してエントリーに進みます。No data is saved anywhere. refresh the page if you need to start again.</span>
 
@@ -67,6 +68,8 @@
             <!--
 
             -->
+
+
             </div>
         </div>
     
