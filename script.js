@@ -21,7 +21,6 @@ document.addEventListener("DOMContentLoaded", function() {
             // The rest of the logic will be handled elsewhere
             processClubSelection(clubData);
             console.log(clubData); // For debugging purposes, to verify the data
-            console.log(newRowNumbers.club);
         })
         .catch(error => console.error('Error fetching the JSON file:', error));
 });
@@ -31,7 +30,7 @@ function processClubSelection(clubData) {
     const clubSelect = document.getElementById('clubSelect');
     const codeInput = document.getElementById('codeInput');
     const submitButton = document.getElementById('submitButton');
-    const resultDiv = document.getElementById('result');
+    //const resultDiv = document.getElementById('result');
 
     // Add new club option
     const newClubRecord = document.createElement('option');
@@ -284,12 +283,32 @@ function handleAddRow(event) {
 function validateRow(row) {
     const cells = row.querySelectorAll('td');
     for (let cell of cells) {
-        if (cell.textContent.trim() === '') {
-            return false;
+        // Check if the cell contains a <select> element
+        const select = cell.querySelector('select');
+        if (select) {
+            // Check if the <select> has a valid (non-empty) value selected
+            if (select.value === '' || select.value === null) {
+                return false;
+            }
+        } else {
+            // For contenteditable cells, check if the text content is not empty
+            const isContentEditable = cell.getAttribute('contenteditable');
+            if (isContentEditable === 'true' && cell.textContent.trim() === '') {
+                return false;
+            }
         }
     }
-    return true;
+    return true; // All checks passed
 }
+// function validateRow(row) {
+//     const cells = row.querySelectorAll('td');
+//     for (let cell of cells) {
+//         if (cell.textContent.trim() === '') {
+//             return false;
+//         }
+//     }
+//     return true;
+// }
 /////////////////////////////////////////////////////
 function addRow(containerId, headers) { //newRowNumber, 
     let newRowNumber = 0;
@@ -424,13 +443,22 @@ document.getElementById('updateButton').addEventListener('click', function() {
         let cells = []; 
         const data = rows.map(row => {
             if (wasNewClubOptionSelected) {
-                cells = Array.from(row.cells); // Exclude the last cell of each row            
+                cells = Array.from(row.cells);            
             } else {
-                cells = Array.from(row.cells).slice(0, -1); // Exclude the last cell of each row
+                cells = Array.from(row.cells);//.slice(0, -1); // Exclude the last cell of each row
             }
             return cells.reduce((obj, cell, index) => {
-                obj[headers[index]] = cell.textContent.trim();
+                const select = cell.querySelector('select');
+                if (select) {
+                    // If a <select> is found, use the value of the selected option
+                    obj[headers[index]] = select.value;
+                } else {
+                    // Otherwise, proceed with using textContent
+                    obj[headers[index]] = cell.textContent.trim();
+                }
                 return obj;
+                // obj[headers[index]] = cell.textContent.trim();
+                // return obj;
             }, {});
         }).filter(row => !Object.values(row).some(value => value === ''));
         if (data.length === 0) {

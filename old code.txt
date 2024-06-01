@@ -376,3 +376,47 @@
 
 
 ////// 1532 ///////
+
+
+ have this table data cell.
+<td><select class="riderSex" required>
+                                    <option value="" disabled selected>性別</option>
+                                    <option value="女子">女子</option>
+                                    <option value="男子">男子</option>
+                                </select></td>
+
+
+
+    const data = rows.map(row => {
+            cells = Array.from(row.cells);            
+            return cells.reduce((obj, cell, index) => {
+                obj[headers[index]] = cell.textContent.trim();
+                return obj;
+            }, {});
+        });
+
+the above code records the value as follows: 
+
+riderSex: '性別\n                                    女子\n                                    男子'
+
+how can i fix it?
+
+/////////////////////////////////////////////////////////
+
+function validateRow(row) {
+    const cells = row.querySelectorAll('td');
+    for (let cell of cells) {
+        if (cell.textContent.trim() === '') {
+            return false;
+        }
+    }
+    return true;
+}
+
+this function cheks if all contenteditable="true" cells have been filled in. but, some cells have the following:
+<td><select class="riderSex" required>
+                                    <option value="" disabled selected>性別</option>
+                                    <option value="女子">女子</option>
+                                    <option value="男子">男子</option>
+                                </select></td>
+change the function so that it also checks that a selection has been made. 
