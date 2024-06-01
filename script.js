@@ -7,10 +7,6 @@
 
 let clubSelected = false;
 let wasNewClubOptionSelected = false;
-// let clubNewRowNumber = 0;
-// let teamsNewRowNumber = 0;
-// let horsesNewRowNumber = 0;
-// let ridersNewRowNumber = 0;
 let newRowNumbers = { club: 0, teams: 0, horses: 0, riders: 0 };
 //*///////////////////////////////////////////////////////////////////////////////////////////////////////
 document.addEventListener("DOMContentLoaded", function() {
@@ -18,9 +14,8 @@ document.addEventListener("DOMContentLoaded", function() {
         .then(response => response.json())
         .then(data => {
             const clubData = data;
-            // The rest of the logic will be handled elsewhere
             processClubSelection(clubData);
-            console.log(clubData); // For debugging purposes, to verify the data
+            console.log(clubData); // For debugging purposes
         })
         .catch(error => console.error('Error fetching the JSON file:', error));
 });
@@ -30,32 +25,25 @@ function processClubSelection(clubData) {
     const clubSelect = document.getElementById('clubSelect');
     const codeInput = document.getElementById('codeInput');
     const submitButton = document.getElementById('submitButton');
-    //const resultDiv = document.getElementById('result');
-
-    // Add new club option
     const newClubRecord = document.createElement('option');
+
     newClubRecord.value = "new-club";
     newClubRecord.textContent = ">>新登録<<";
     clubSelect.appendChild(newClubRecord);
-    // Populate the select element with club names
     clubData.forEach(club => {
         const option = document.createElement('option'); // <option value="">Select a club</option>
         option.value = club.clubName;
         option.textContent = club.clubName;
         clubSelect.appendChild(option); // <select id="clubSelect">
     });
-
-    // Event listener for club selection
     clubSelect.addEventListener('change', function() {
         const selectedClub = clubSelect.value;
         if (selectedClub === "new-club") {
-            
             clubSelectContainer.style.display = 'none';
             const clubInfoContainer = document.getElementById('clubInfoContainer');
             clubInfoContainer.style.display = 'block';
             fetchAndParseJSON('/dummy.json', false);
             wasNewClubOptionSelected = true;
-
         } else if (selectedClub !== "") {
             codeInput.style.display = 'block';
             submitButton.style.display = 'block';
@@ -64,8 +52,6 @@ function processClubSelection(clubData) {
             submitButton.style.display = 'none';
         }
     });
-
-    // Event listener for submit button
     submitButton.addEventListener('click', function() {
         const selectedClub = clubSelect.value;
         const inputCode = codeInput.value;
@@ -79,12 +65,9 @@ function processClubSelection(clubData) {
 
         } else {
             codeInput.style.border = '2px solid red';
-            //resultDiv.innerHTML = "もう一度";
-            //resultDiv.style.color = 'red';
         }
     });
 }
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 //              Read data
 async function fetchAndParseJSON(file, canEdit) {
@@ -117,7 +100,6 @@ async function fetchAndParseJSON(file, canEdit) {
         console.error('Error fetching or parsing the JSON file:', error);
     }
 }
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //          Display Tables 
 function displayClub(club, canEdit) {
@@ -142,15 +124,6 @@ function displayClub(club, canEdit) {
         document.getElementById('addClubRow').style.display = 'block';
     } 
     document.getElementById('addClubRow').addEventListener('click', handleAddRow);
-    // document.getElementById('addClubRow').addEventListener('click', (event) => {
-    //     newRowNumbers.club += 1;
-    //     if (newRowNumbers.club < 2) {
-    //         console.log(newRowNumbers.club);
-    //         const containerId = document.getElementById('addClubRow').getAttribute('data-container-id');
-    //         const headers = document.getElementById('addClubRow').getAttribute('data-headers').split(',');
-    //         addRow(containerId, headers); //newRowNumbers.club, 
-    //     }
-    // });
 }
 ///////////////////////////////////////
 function displayTeams(teams, canEdit) {
@@ -180,13 +153,6 @@ function displayTeams(teams, canEdit) {
         button.addEventListener('click', deleteRow);
     });
     document.getElementById('addTeamRow').addEventListener('click', handleAddRow);
-    // document.getElementById('addTeamRow').addEventListener('click', (event) => {
-    //         console.log(newRowNumbers.teams);
-    //         //const newRowNumber =  document.getElementById('addTeamRow').getAttribute('data-new-row-number');
-    //         const containerId = document.getElementById('addTeamRow').getAttribute('data-container-id');
-    //         const headers = document.getElementById('addTeamRow').getAttribute('data-headers').split(',');
-    //         addRow(newRowNumbers.teams, containerId, headers);
-    //     });
 }
 /////////////////////////////////////////
 function displayHorses(horses, canEdit) {
@@ -224,13 +190,6 @@ function displayHorses(horses, canEdit) {
         button.addEventListener('click', deleteRow);
     });
     document.getElementById('addHorseRow').addEventListener('click', handleAddRow);
-    // document.getElementById('addHorsesRow').addEventListener('click', (event) => {
-    //     console.log();
-    //     //const newRowNumber =  document.getElementById('addHorseRow').getAttribute('data-new-row-number');
-    //     const containerId = document.getElementById('addHorseRow').getAttribute('data-container-id');
-    //     const headers = document.getElementById('addHorseRow').getAttribute('data-headers').split(',');
-    //     addRow(newRowNumbers.horses, containerId, headers);
-    // });
 }
 /////////////////////////////////////////
 function displayRiders(riders, canEdit) {
@@ -274,43 +233,30 @@ function deleteRow(event) {
 }
 //////////////////////////////
 function handleAddRow(event) {
-    //const newRowNumber =  event.target.getAttribute('data-new-row-number');
     const containerId = event.target.getAttribute('data-container-id');
     const headers = event.target.getAttribute('data-headers').split(',');
-    addRow(containerId, headers); //newRowNumber,
+    addRow(containerId, headers); 
 }
 ///////////////////////////
 function validateRow(row) {
     const cells = row.querySelectorAll('td');
     for (let cell of cells) {
-        // Check if the cell contains a <select> element
         const select = cell.querySelector('select');
         if (select) {
-            // Check if the <select> has a valid (non-empty) value selected
             if (select.value === '' || select.value === null) {
                 return false;
             }
         } else {
-            // For contenteditable cells, check if the text content is not empty
             const isContentEditable = cell.getAttribute('contenteditable');
             if (isContentEditable === 'true' && cell.textContent.trim() === '') {
                 return false;
             }
         }
     }
-    return true; // All checks passed
+    return true; 
 }
-// function validateRow(row) {
-//     const cells = row.querySelectorAll('td');
-//     for (let cell of cells) {
-//         if (cell.textContent.trim() === '') {
-//             return false;
-//         }
-//     }
-//     return true;
-// }
 /////////////////////////////////////////////////////
-function addRow(containerId, headers) { //newRowNumber, 
+function addRow(containerId, headers) {  
     let newRowNumber = 0;
     const tableContainer = document.getElementById(containerId);
     const table = tableContainer.querySelector('table');
@@ -365,7 +311,6 @@ function addRow(containerId, headers) { //newRowNumber,
     // Change the '追加' button to 'Update Table'
     const addButton = tableContainer.querySelector('.addRowButton');
     addButton.textContent = '更新';
-    // increment newRowNumbers
     if (containerId === 'clubTableContainer') {
         //newRowNumbers.club += 1;
     } else if (containerId === 'teamsTableContainer') {
@@ -436,7 +381,7 @@ document.getElementById('updateButton').addEventListener('click', function() {
         const table = document.getElementById(containerId).querySelector('table');
         let rows = [];
         if (wasNewClubOptionSelected) {
-            rows = Array.from(table.rows).slice(2); // Skip the header row
+            rows = Array.from(table.rows).slice(2); // Skip the header row dummy info row
         } else {
             rows = Array.from(table.rows).slice(1); // Skip the header row
         }
@@ -450,15 +395,11 @@ document.getElementById('updateButton').addEventListener('click', function() {
             return cells.reduce((obj, cell, index) => {
                 const select = cell.querySelector('select');
                 if (select) {
-                    // If a <select> is found, use the value of the selected option
                     obj[headers[index]] = select.value;
                 } else {
-                    // Otherwise, proceed with using textContent
                     obj[headers[index]] = cell.textContent.trim();
                 }
                 return obj;
-                // obj[headers[index]] = cell.textContent.trim();
-                // return obj;
             }, {});
         }).filter(row => !Object.values(row).some(value => value === ''));
         if (data.length === 0) {
