@@ -7,10 +7,11 @@
 
 let clubSelected = false;
 let wasNewClubOptionSelected = false;
-let clubNewRowNumber = 0;
-let teamsNewRowNumber = 0;
-let horsesNewRowNumber = 0;
-let ridersNewRowNumber = 0;
+// let clubNewRowNumber = 0;
+// let teamsNewRowNumber = 0;
+// let horsesNewRowNumber = 0;
+// let ridersNewRowNumber = 0;
+let newRowNumbers = { club: 0, teams: 0, horses: 0, riders: 0 };
 //*///////////////////////////////////////////////////////////////////////////////////////////////////////
 document.addEventListener("DOMContentLoaded", function() {
     fetch('json_files_list.json')
@@ -20,6 +21,7 @@ document.addEventListener("DOMContentLoaded", function() {
             // The rest of the logic will be handled elsewhere
             processClubSelection(clubData);
             console.log(clubData); // For debugging purposes, to verify the data
+            console.log(newRowNumbers.club);
         })
         .catch(error => console.error('Error fetching the JSON file:', error));
 });
@@ -132,41 +134,24 @@ function displayClub(club, canEdit) {
             <td contenteditable="${canEdit}">${c.fax}</td>
             <td>${c.address}</td>
         </tr>`;
-        //clubNewRowNumber = 1;
     });
     tableHTML += `</table>`;
-    tableHTML += `<button style="display: none;" id="addClubRow" class="addRowButton" data-new-row-number="${clubNewRowNumber}" data-container-id="clubTableContainer" data-headers="1,2,3,4,5,6,7">追加</button>`; //
+    tableHTML += `<button style="display: none;" id="addClubRow" class="addRowButton" data-new-row-number="1" data-container-id="clubTableContainer" data-headers="1,2,3,4,5,6,7">追加</button>`; //
     tableContainer.innerHTML = tableHTML;
     tableContainer.style.display = 'block';
-    if (wasNewClubOptionSelected && clubNewRowNumber === 0) {
+    if (wasNewClubOptionSelected) {
         document.getElementById('addClubRow').style.display = 'block';
     } 
-    // const newRowClick = document.getElementById('addClubRow');
-    //newRowClick.addEventListener('click', handleAddRow);
-    //document.getElementById('addClubRow').addEventListener('click', handleAddRow);
-    //newRowClick.addEventListener('click', function() {
-    document.getElementById('addClubRow').addEventListener('click', (event) => {
-        clubNewRowNumber += 1;
-        
-        // if (clubNewRowNumber > 1) {
-        //     document.getElementById('addClubRow').style.display = 'none';
-        // } else {
-        //     handleAddRow(event);
-        // }
-        if (clubNewRowNumber < 2) {
-            console.log(clubNewRowNumber);
-            //handleAddRow(event);
-        
-
-
-        const newRowNumber =  document.getElementById('addClubRow').getAttribute('data-new-row-number');
-        const containerId = document.getElementById('addClubRow').getAttribute('data-container-id');
-        const headers = document.getElementById('addClubRow').getAttribute('data-headers').split(',');
-        addRow(newRowNumber, containerId, headers);
-        }
-
-    });
-    
+    document.getElementById('addClubRow').addEventListener('click', handleAddRow);
+    // document.getElementById('addClubRow').addEventListener('click', (event) => {
+    //     newRowNumbers.club += 1;
+    //     if (newRowNumbers.club < 2) {
+    //         console.log(newRowNumbers.club);
+    //         const containerId = document.getElementById('addClubRow').getAttribute('data-container-id');
+    //         const headers = document.getElementById('addClubRow').getAttribute('data-headers').split(',');
+    //         addRow(containerId, headers); //newRowNumbers.club, 
+    //     }
+    // });
 }
 ///////////////////////////////////////
 function displayTeams(teams, canEdit) {
@@ -186,21 +171,26 @@ function displayTeams(teams, canEdit) {
         }else {
             tableHTML += `</tr>`;
         }
-        newRowNumber = +t.number + 1;
+        newRowNumbers.teams = +t.number + 1;
     });
     tableHTML += `</table>`;
-    tableHTML += `<button id="addTeamRow" class="addRowButton" data-new-row-number="${teams.length + 1}" data-container-id="teamsTableContainer" data-headers="Number,Team Name">追加</button>`;
+    tableHTML += `<button id="addTeamRow" class="addRowButton" data-new-row-number="${newRowNumbers.teams}" data-container-id="teamsTableContainer" data-headers="Number,Team Name">追加</button>`;
     tableContainer.innerHTML = tableHTML;
     tableContainer.style.display = 'block';
-
-    document.getElementById('addTeamRow').addEventListener('click', handleAddRow);
     Array.from(document.getElementsByClassName('deleteRow')).forEach(button => {
         button.addEventListener('click', deleteRow);
     });
+    document.getElementById('addTeamRow').addEventListener('click', handleAddRow);
+    // document.getElementById('addTeamRow').addEventListener('click', (event) => {
+    //         console.log(newRowNumbers.teams);
+    //         //const newRowNumber =  document.getElementById('addTeamRow').getAttribute('data-new-row-number');
+    //         const containerId = document.getElementById('addTeamRow').getAttribute('data-container-id');
+    //         const headers = document.getElementById('addTeamRow').getAttribute('data-headers').split(',');
+    //         addRow(newRowNumbers.teams, containerId, headers);
+    //     });
 }
 /////////////////////////////////////////
 function displayHorses(horses, canEdit) {
-    let newRowNumber = 0;
     const tableContainer = document.getElementById('horsesTableContainer');
     let tableHTML = `<h4>馬 / Horses</h4><table><tr><th>番</th><th>馬名</th><th>フリガナ</th><th>登録番号</th><th>性別</th><th>年齢</th><th>毛色</th><th>品種</th><th>産地</th><th>所有者</th>`;
     if (canEdit) {
@@ -225,17 +215,23 @@ function displayHorses(horses, canEdit) {
         }else {
             tableHTML += `</tr>`;
         }
-        newRowNumber = +h.number + 1;
+        newRowNumbers.horses = +h.number + 1;
     });
     tableHTML += `</table>`;
-    tableHTML += `<button id="addHorseRow" class="addRowButton" data-new-row-number="${newRowNumber}" data-container-id="horsesTableContainer" data-headers="Number,Horse Name,Horse Name Furigana,Horse Reg Number,Horse Sex,Horse Age,Horse Color,Horse Breed,Horse Origin,Horse Owner">追加</button>`;
+    tableHTML += `<button id="addHorseRow" class="addRowButton" data-new-row-number="${newRowNumbers.horses}" data-container-id="horsesTableContainer" data-headers="Number,Horse Name,Horse Name Furigana,Horse Reg Number,Horse Sex,Horse Age,Horse Color,Horse Breed,Horse Origin,Horse Owner">追加</button>`;
     tableContainer.innerHTML = tableHTML;
     tableContainer.style.display = 'block';
-
-    document.getElementById('addHorseRow').addEventListener('click', handleAddRow);
     Array.from(document.getElementsByClassName('deleteRow')).forEach(button => {
         button.addEventListener('click', deleteRow);
     });
+    document.getElementById('addHorseRow').addEventListener('click', handleAddRow);
+    // document.getElementById('addHorsesRow').addEventListener('click', (event) => {
+    //     console.log();
+    //     //const newRowNumber =  document.getElementById('addHorseRow').getAttribute('data-new-row-number');
+    //     const containerId = document.getElementById('addHorseRow').getAttribute('data-container-id');
+    //     const headers = document.getElementById('addHorseRow').getAttribute('data-headers').split(',');
+    //     addRow(newRowNumbers.horses, containerId, headers);
+    // });
 }
 /////////////////////////////////////////
 function displayRiders(riders, canEdit) {
@@ -259,17 +255,16 @@ function displayRiders(riders, canEdit) {
         }else {
             tableHTML += `</tr>`;
         }
-        newRowNumber = +r.number + 1;
+        newRowNumbers.riders = +r.number + 1;
     });
     tableHTML += `</table>`;
-    tableHTML += `<button id="addRiderRow" class="addRowButton" data-new-row-number="${newRowNumber}" data-container-id="ridersTableContainer" data-headers="Number,Rider Name,Rider Name Furigana,Rider Reg Number,Rider Sex">追加</button>`;
+    tableHTML += `<button id="addRiderRow" class="addRowButton" data-new-row-number="${newRowNumbers.riders}" data-container-id="ridersTableContainer" data-headers="Number,Rider Name,Rider Name Furigana,Rider Reg Number,Rider Sex">追加</button>`;
     tableContainer.innerHTML = tableHTML;
     tableContainer.style.display = 'block';
-
-    document.getElementById('addRiderRow').addEventListener('click', handleAddRow);
     Array.from(document.getElementsByClassName('deleteRow')).forEach(button => {
         button.addEventListener('click', deleteRow);
     });
+    document.getElementById('addRiderRow').addEventListener('click', handleAddRow);
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //          [追加] & [ X ] table buttons
@@ -280,13 +275,10 @@ function deleteRow(event) {
 }
 //////////////////////////////
 function handleAddRow(event) {
-    //console.log('handleAddRow1');
-    // const newRowNumber =  event.target.getAttribute('data-new-row-number');
-    // console.log('handleAddRow2');
-    // const containerId = event.target.getAttribute('data-container-id');
-    // console.log('handleAddRow3');
-    // const headers = event.target.getAttribute('data-headers').split(',');
-    //addRow(newRowNumber, containerId, headers); //
+    //const newRowNumber =  event.target.getAttribute('data-new-row-number');
+    const containerId = event.target.getAttribute('data-container-id');
+    const headers = event.target.getAttribute('data-headers').split(',');
+    addRow(containerId, headers); //newRowNumber,
 }
 ///////////////////////////
 function validateRow(row) {
@@ -299,10 +291,20 @@ function validateRow(row) {
     return true;
 }
 /////////////////////////////////////////////////////
-function addRow(newRowNumber, containerId, headers) { //
+function addRow(containerId, headers) { //newRowNumber, 
+    let newRowNumber = 0;
     const tableContainer = document.getElementById(containerId);
     const table = tableContainer.querySelector('table');
     const newRow = document.createElement('tr');
+    if (containerId === 'clubTableContainer') {
+        newRowNumber = newRowNumbers.club;
+    } else if (containerId === 'teamsTableContainer') {
+        newRowNumber = newRowNumbers.teams;
+    } else if (containerId === 'horsesTableContainer') {
+        newRowNumber = newRowNumbers.horses;
+    } else if (containerId === 'ridersTableContainer') {
+        newRowNumber = newRowNumbers.riders;
+    };
     
     headers.forEach(header => {
         let newCell = document.createElement('td');
@@ -344,11 +346,24 @@ function addRow(newRowNumber, containerId, headers) { //
     // Change the '追加' button to 'Update Table'
     const addButton = tableContainer.querySelector('.addRowButton');
     addButton.textContent = '更新';
+    // increment newRowNumbers
+    if (containerId === 'clubTableContainer') {
+        //newRowNumbers.club += 1;
+    } else if (containerId === 'teamsTableContainer') {
+        console.log(newRowNumbers.teams);
+        newRowNumbers.teams += 1;
+    } else if (containerId === 'horsesTableContainer') {
+        newRowNumbers.horses += 1;
+    } else if (containerId === 'ridersTableContainer') {
+        newRowNumbers.riders += 1;
+    };
     addButton.removeEventListener('click', handleAddRow);
     addButton.addEventListener('click', () => {
         if (validateRow(newRow)) {
-            addButton.textContent = '追加';
-            addButton.addEventListener('click', handleAddRow);
+            if (containerId != 'clubTableContainer') {
+                addButton.textContent = '追加';
+                addButton.addEventListener('click', handleAddRow);
+            }
         } else {
             alert('Please fill in all cells.');
         }
@@ -435,13 +450,13 @@ document.getElementById('updateButton').addEventListener('click', function() {
         console.log('Updated Data:', updatedData);
 
         // // Extract necessary information
-        const club = updatedData.club;// TableContainer;
+        //const club = updatedData.club;// TableContainer;
         // const teams = data.teams;
         // const horses = data.horses;
         // const riders = data.riders;
 
         // // Call functions to display data in tables
-        displayClub(club, false);
+        //displayClub(club, false);
         // displayTeams(teams);
         // displayHorses(horses);
         // displayRiders(riders);
