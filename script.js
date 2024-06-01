@@ -42,7 +42,7 @@ function processClubSelection(clubData) {
             clubSelectContainer.style.display = 'none';
             const clubInfoContainer = document.getElementById('clubInfoContainer');
             clubInfoContainer.style.display = 'block';
-            fetchAndParseJSON('/dummy.json', false);
+            fetchAndParseJSON('dummy.json', false);
             wasNewClubOptionSelected = true;
         } else if (selectedClub !== "") {
             codeInput.style.display = 'block';
