@@ -420,3 +420,8 @@ this function cheks if all contenteditable="true" cells have been filled in. but
                                     <option value="男子">男子</option>
                                 </select></td>
 change the function so that it also checks that a selection has been made. 
+
+
+
+
+Number,teamName,scheduleNumber,scheduleDate,category,eventCode,eventName,priceCode,riderName,riderRegNumber,horseName,horseRegNumber,comment"
