@@ -496,8 +496,8 @@ document.getElementById('updateButton').addEventListener('click', function() {
 
         const eventForm = document.getElementById('eventForm');
         const addEntryButton = document.getElementById('addEntryButton');
-        eventForm.style.display = 'inline-flex';
-        addEntryButton.style.display = 'inline-flex';
+        eventForm.style.display = 'block';
+        addEntryButton.style.display = 'block';
 
         // displayEntries(updatedData, true);
 
@@ -515,7 +515,7 @@ function displayEntryForm(updatedData) {}
 // function displayEntryForm(updatedData) {
 //     document.getElementById('addEntryButton').addEventListener('click', function() {
 //         const eventForm = document.getElementById('eventForm');
-//         const entryContainer = eventForm.querySelector('.entry-container');
+//         const entryContainer = eventForm.querySelector('.entry'); //-container
 //         const lastEntry = entryContainer ? entryContainer.lastElementChild : null;
 //         const errorMessage = document.getElementById('error-message-entry');
 
@@ -574,7 +574,7 @@ function displayEntryForm(updatedData) {}
 //         `;
 //         if (!entryContainer) {
 //             const newEntryContainer = document.createElement('div');
-//             newEntryContainer.className = 'entry-container';
+//             newEntryContainer.className = 'entry'; //-container
 //             eventForm.appendChild(newEntryContainer);
 //             newEntryContainer.appendChild(entryDiv);
 //         } else {
