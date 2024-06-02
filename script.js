@@ -490,12 +490,145 @@ document.getElementById('updateButton').addEventListener('click', function() {
         // displayTeams(teams);
         // displayHorses(horses);
         // displayRiders(riders);
-        const entriesContainer = document.getElementById('entriesContainer');
-        entriesContainer.style.display = 'block';
-        displayEntries(updatedData, true);
 
+
+
+
+        const eventForm = document.getElementById('eventForm');
+        const addEntryButton = document.getElementById('addEntryButton');
+        eventForm.style.display = 'inline-flex';
+        addEntryButton.style.display = 'inline-flex';
+
+        // displayEntries(updatedData, true);
+
+        displayEntryForm(updatedData);
     }
 });
+
+function displayEntryForm(updatedData) {}
+
+
+
+
+
+// ///////////////////////////////////////////////////////////////////////////////////////////////////////
+// function displayEntryForm(updatedData) {
+//     document.getElementById('addEntryButton').addEventListener('click', function() {
+//         const eventForm = document.getElementById('eventForm');
+//         const entryContainer = eventForm.querySelector('.entry-container');
+//         const lastEntry = entryContainer ? entryContainer.lastElementChild : null;
+//         const errorMessage = document.getElementById('error-message-entry');
+
+//         if (lastEntry) {
+//             const inputs = lastEntry.querySelectorAll('input[required], select[required]');
+//             const isValid = validateLastInputs(inputs, errorMessage);
+//             if (!isValid) {
+//                 return;
+//             }
+//         }
+//         const entryDiv = document.createElement('div');
+//         entryDiv.className = 'entry';
+//         const entryNumber = document.querySelectorAll('.entry').length + 1;
+//         let charDisplayId = 'entryNumberCharDisplay' + (entryNumber - 1);
+//         const entryNumberCharDisplay = document.getElementById(charDisplayId);
+//         if (entryNumberCharDisplay) {
+//             entryNumberCharDisplay.textContent = 'C'.repeat(entryNumber - 1);
+//         }
+//         charDisplayId = 'entryNumberCharDisplay' + (entryNumber);
+//         entryDiv.innerHTML = `
+//             <div class="entryNumberLine">
+//                 <div class="entryNumber">${entryNumber}</div>
+//                 <div id="${charDisplayId}" class="entryNumberChar">_</div>
+//             </div>
+//             <div class="entry-fields">
+//                 <div>
+//                     <label for="teamSelect">所属</label>
+//                     <select class="teamSelect" required></select>
+//                 </div>
+//                 <div>
+//                     <label for="scheduleNumber">競技番号</label>
+//                     <input type="number" class="scheduleNumber" min="1" max="999" required>
+//                     <span class="eventInfoDisplay"></span>
+//                     <div class="scheduleDate" style="display: none;"></div>
+//                     <div class="category" style="display: none;"></div>
+//                     <div class="eventCode" style="display: none;"></div>
+//                     <div class="eventName" style="display: none;"></div>
+//                     <div class="priceCode" style="display: none;"></div>
+//                     <div class="price" style="display: none;"></div>
+//                 </div>
+//                 <div>
+//                     <label for="riderSelect">選手名</label>
+//                     <select class="riderSelect" required></select>
+//                     <div class="riderSelectRegNumber" style="display: none;"></div>
+//                 </div>
+//                 <div>
+//                     <label for="horseSelect">馬名</label>
+//                     <select class="horseSelect" required></select>
+//                     <div class="horseSelectRegNumber" style="display: none;"></div>
+//                 </div>
+//                 <div>
+//                     <label for="entryComment">備考</label>
+//                     <textarea class="entryComment" rows="2" placeholder="選択馬場種目名：2A、OP、等"></textarea>
+//                 </div>
+//             </div>
+//         `;
+//         if (!entryContainer) {
+//             const newEntryContainer = document.createElement('div');
+//             newEntryContainer.className = 'entry-container';
+//             eventForm.appendChild(newEntryContainer);
+//             newEntryContainer.appendChild(entryDiv);
+//         } else {
+//             entryContainer.appendChild(entryDiv);
+//         }
+//         updateSelectOptions(updatedData);
+//     });
+// }
+// function updateSelectOptions(updatedData) {
+//     const teamSelects = document.querySelectorAll('.teamSelect');
+//     const riderSelects = document.querySelectorAll('.riderSelect');
+//     const horseSelects = document.querySelectorAll('.horseSelect');
+
+//     teamSelects.forEach(select => {
+//         select.innerHTML = '';
+//         updatedData.teams.forEach(team => {
+//             const option = document.createElement('option');
+//             option.value = team.teamName;
+//             option.textContent = team.teamName;
+//             select.appendChild(option);
+//         });
+//     });
+
+//     riderSelects.forEach(select => {
+//         select.innerHTML = '';
+//         updatedData.riders.forEach(rider => {
+//             const option = document.createElement('option');
+//             option.value = rider.riderName;
+//             option.textContent = rider.riderName;
+//             select.appendChild(option);
+//         });
+//     });
+
+//     horseSelects.forEach(select => {
+//         select.innerHTML = '';
+//         updatedData.horses.forEach(horse => {
+//             const option = document.createElement('option');
+//             option.value = horse.horseName;
+//             option.textContent = horse.horseName;
+//             select.appendChild(option);
+//         });
+//     });
+// }
+
+// function validateLastInputs(inputs, errorMessage) {
+//     let isValid = true;
+//     inputs.forEach(input => {
+//         if (!input.value) {
+//             isValid = false;
+//             errorMessage.textContent = "Please fill out all required fields.";
+//         }
+//     });
+//     return isValid;
+// }
 
 
 

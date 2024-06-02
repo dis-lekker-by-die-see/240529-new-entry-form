@@ -157,7 +157,7 @@ tr:hover {
     margin-top: 1%;
 }
 
-.clubInfoContainer, .entriesContainer {
+.clubInfoContainer, .entry-container {
     
     overflow-x: auto;
     width: 100%;
@@ -168,4 +168,28 @@ tr:hover {
     */
 }
 
+.form {
     
+    flex-direction: row;
+    
+    width: 100%;
+    min-width: 250px;
+    
+    
+}
+.entry .entry-fields > div {
+    flex: 1 1 calc(25% - 20px);
+}
+
+.entry {
+    margin-bottom: 20px;
+    padding: 20px;
+    /*background-color: #f9f9f9;
+    */
+    background-color: rgb(251, 234, 237);
+    border: 1px solid #e1e1e1;
+    border-radius: 12px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding-bottom: 20px;
+    margin-bottom: 25px;
+}

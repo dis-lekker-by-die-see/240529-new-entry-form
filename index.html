@@ -53,14 +53,69 @@
         </div>
         
         <!---------------------------------------------------------------------------------------------->
-        
+        <!--
         <div id="entriesContainer" class="entriesContainer" style="display: none;">
 
             <div id="entriesTableContainer" class="table-container"></div>
 
 
         </div>
+    -->
         <!---------------------------------------------------------------------------------------------->
+        
+        <!--
+        <div id="entriesContainer" class="entriesContainer" style="display: none;">
+            <div id="eventForm">
+                <div id="entryForm">
+                    <button id="addEntryButton">Add Entry</button>
+                    <div id="error-message-entry" style="color: red;"></div>
+                </div>
+            </div>
+        </div>
+    -->
+        <form id="eventForm" style="display: none;">
+            <div class="entry-container">
+                <div class="entry">
+                    <div class="entryNumberLine">
+                        <div class="entryNumber">1</div>
+                        
+                    </div>
+                    <div class="entry-fields">
+                        <div>
+                            <label for="teamSelect">所属</label>
+                            <select class="teamSelect" required></select>
+                        </div>
+                        <div>
+                            <label for="scheduleNumber">競技番号</label>
+                            <input type="number" class="scheduleNumber" min="1" max="999" required>
+                            <span class="eventInfoDisplay"></span>
+                            <div class="scheduleDate" style="display: none;"></div>
+                            <div class="category" style="display: none;"></div>
+                            <div class="eventCode" style="display: none;"></div>
+                            <div class="eventName" style="display: none;"></div>
+                            <div class="priceCode" style="display: none;"></div>
+                            <div class="price" style="display: none;"></div>
+                        </div>
+                        <div>
+                            <label for="riderSelect">選手名</label>
+                            <select class="riderSelect" required></select>
+                            <div class="riderSelectRegNumber" style="display: none;"></div>
+                        </div>
+                        <div>
+                            <label for="horseSelect">馬名</label>
+                            <select class="horseSelect" required></select>
+                            <div class="horseSelectRegNumber" style="display: none;"></div>
+                        </div>
+                        <div>
+                            <label for="entryComment">備考</label>
+                            <textarea class="entryComment" rows="2" placeholder="選択馬場種目名：2A、OP、等"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div id="error-message-entry" class="error-message"></div>
+        <button type="button" id="addEntryButton" style="display: none;">追加・更新</button>
         
     </div>
     
