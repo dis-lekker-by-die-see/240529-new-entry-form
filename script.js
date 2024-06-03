@@ -716,6 +716,102 @@ function updateSelectOptions() {
         select.dispatchEvent(event);
     });
 }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//          [Create File Button] at bottom of Entries 
+document.getElementById('updateDataWithEntriesButton').addEventListener('click', function() {
+    
 
+    //get updatedData
+    //append Entries
+    //create json file for download
+
+
+    const tableContainers = ['clubTableContainer', 'teamsTableContainer', 'horsesTableContainer', 'ridersTableContainer'];
+    let isEmptyTable = false;
+    tableContainers.forEach(containerId => {
+        const tableName = containerId.replace(/TableContainer/i, '');  // 'i' makes it case-insensitive
+        if (tableName == 'club') {
+            headers = [
+                "clubName",
+                "registrationOfficer",
+                "mobile",
+                "phone",
+                "email",
+                "fax",
+                "address"
+            ]
+        } else if (tableName == 'teams') {
+            headers = [
+                "number",
+                "teamName"
+            ]
+        } else if (tableName == 'horses') {
+            headers = [
+                "number",
+                "horseName",
+                "horseNameFurigana",
+                "horseRegNumber",
+                "horseSex",
+                "horseAge",
+                "horseColor",
+                "horseBreed",
+                "horseOrigin",
+                "horseOwner"
+            ]
+        } else if (tableName == 'riders') {
+            headers = [
+                "number",
+                "riderName",
+                "riderNameFurigana",
+                "riderRegNumber",
+                "riderSex"
+            ]
+        }
+        const table = document.getElementById(containerId).querySelector('table');
+        let rows = [];
+        if (wasNewClubOptionSelected) {
+            rows = Array.from(table.rows).slice(2); // Skip the header row & dummy info row
+        } else {
+            rows = Array.from(table.rows).slice(1); // Skip the header row
+        }
+        let cells = []; 
+        const data = rows.map(row => {
+            if (wasNewClubOptionSelected) {
+                cells = Array.from(row.cells);            
+            } else {
+                cells = Array.from(row.cells);//.slice(0, -1); // Exclude the last cell of each row
+            }
+            return cells.reduce((obj, cell, index) => {
+                const select = cell.querySelector('select');
+                if (select) {
+                    obj[headers[index]] = select.value;
+                } else {
+                    obj[headers[index]] = cell.textContent.trim();
+                }
+                return obj;
+            }, {});
+        }).filter(row => !Object.values(row).some(value => value === ''));
+        if (data.length === 0) {
+            isEmptyTable = true;
+        } else {
+            updatedData[tableName] = data;
+        }
+    });
+    if (isEmptyTable) {
+        const userChoice = confirm("One or more tables have no valid data rows. Click 'Cancel' to go back and edit, or 'OK' to reload the page.");
+        if (userChoice) {
+            window.location.reload(); 
+        } else {
+            return;
+        }
+    } else {
+        console.log('Updated Data:', updatedData);
+        clubInfoContainer.style.display = 'none';        
+        const entriesContainer = document.getElementById('entriesContainer');
+        entriesContainer.style.display = 'block';
+        displayEntries(true);
+        loadEventCSV();
+    }
+});
 
 
