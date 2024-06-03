@@ -1,14 +1,8 @@
 
-
-
-
-// const currentTimestampInSeconds = Math.floor(Date.now() / 1000);
-// console.log(currentTimestampInSeconds); // Example output: 1653498845
-
 let clubSelected = false;
 let wasNewClubOptionSelected = false;
 let updatedData = {};
-let newRowNumbers = { club: 0, teams: 0, horses: 0, riders: 0, entries: 1 };
+let newRowNumbers = { club: 0, teams: 0, horses: 0, riders: 0, entries: 0 };
 let events = {};
 //*///////////////////////////////////////////////////////////////////////////////////////////////////////
 document.addEventListener("DOMContentLoaded", function() {
@@ -285,7 +279,7 @@ function validateRow(row) {
     }
     return true; 
 }
-/////////////////////////////////////////////////////
+///////////////////////////////////////
 function addRow(containerId, headers) {  
     let newRowNumber = 0;
     const tableContainer = document.getElementById(containerId);
@@ -337,14 +331,9 @@ function addRow(containerId, headers) {
         newRow.appendChild(newCell);
     });
     table.appendChild(newRow);
-
-    // Change the '追加' button to 'Update Table'
     const addButton = tableContainer.querySelector('.addRowButton');
     addButton.textContent = '更新';
-    if (containerId === 'clubTableContainer') {
-        //newRowNumbers.club += 1;
-    } else if (containerId === 'teamsTableContainer') {
-        console.log(newRowNumbers.teams);
+    if (containerId === 'teamsTableContainer') {
         newRowNumbers.teams += 1;
     } else if (containerId === 'horsesTableContainer') {
         newRowNumbers.horses += 1;
@@ -367,7 +356,6 @@ function addRow(containerId, headers) {
 //          [Update Button] at bottom of all Tables 
 document.getElementById('updateButton').addEventListener('click', function() {
     const tableContainers = ['clubTableContainer', 'teamsTableContainer', 'horsesTableContainer', 'ridersTableContainer'];
-    
     let isEmptyTable = false;
     tableContainers.forEach(containerId => {
         const tableName = containerId.replace(/TableContainer/i, '');  // 'i' makes it case-insensitive
@@ -411,7 +399,7 @@ document.getElementById('updateButton').addEventListener('click', function() {
         const table = document.getElementById(containerId).querySelector('table');
         let rows = [];
         if (wasNewClubOptionSelected) {
-            rows = Array.from(table.rows).slice(2); // Skip the header row dummy info row
+            rows = Array.from(table.rows).slice(2); // Skip the header row & dummy info row
         } else {
             rows = Array.from(table.rows).slice(1); // Skip the header row
         }
@@ -447,33 +435,17 @@ document.getElementById('updateButton').addEventListener('click', function() {
         }
     } else {
         console.log('Updated Data:', updatedData);
-
-
         clubInfoContainer.style.display = 'none';        
-
         const entriesContainer = document.getElementById('entriesContainer');
         entriesContainer.style.display = 'block';
         displayEntries(true);
-
-
         loadEventCSV();
-        
-        // const eventForm = document.getElementById('eventForm');
-        // const addEntryButton = document.getElementById('addEntryButton');
-        // eventForm.style.display = 'block';
-        // addEntryButton.style.display = 'block';
-
-        
-       
-
-        
     }
 });
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //          Entries 
-function displayEntries(canEdit) {
+function displayEntries() {
     const tableContainer = document.getElementById('entriesTableContainer');
-
     let tableHTML = `<h2>Entries</h2>`
     tableHTML += `
         <table><tr>
@@ -505,9 +477,6 @@ function handleAddEntryRow(event) {
     addEntryRow(headers);
 }
 /////////////////////////////////////////////////////
-
-
-
 function addEntryRow(headers) {
     const tableContainer = document.getElementById('entriesTableContainer');
     const table = tableContainer.querySelector('table');
@@ -516,10 +485,10 @@ function addEntryRow(headers) {
         alert('Please fill all required fields before adding a new entry.');
         return; // Stop the function if not all inputs are valid
     }
+    newRowNumbers.entries += 1;
     headers.forEach(header => {
         let newCell = document.createElement('td');
         let inputElement = null; // To hold any input/select element for validation purpose
-
         switch (header) {
             case 'number':
                 newCell.textContent = `${newRowNumbers.entries}`;
@@ -574,119 +543,37 @@ function addEntryRow(headers) {
                 newCell.textContent = '';
                 break;
         }
-
         if (inputElement) {
             newCell.appendChild(inputElement);
         }
-
-        // Add validation event listener if inputElement exists
-        // if (inputElement && inputElement.tagName !== 'SPAN') {
-        //     inputElement.addEventListener('change', () => validateCell(inputElement));
-        // }
-
         newRow.appendChild(newCell);
     });
-
     table.appendChild(newRow);
-    updateSelectOptions(); // Assuming this function populates select options
+    updateSelectOptions(); 
 }
-
-// Validation function to check the input and apply styles if necessary
-// function validateCell(input) {
-//     if (!input.value && input.required) {
-//         input.style.borderColor = 'red'; // Apply red border if invalid
-//     } else {
-//         input.style.borderColor = ''; // Remove border if valid
-//     }
-// }
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 function validateAllInputs() {
     let isValid = true;
     const inputs = document.querySelectorAll('#entriesTableContainer input, #entriesTableContainer select, #entriesTableContainer textarea');
-    
     inputs.forEach(input => {
         if (!input.value && input.required) {
-            input.style.borderColor = 'red'; // Apply red border if invalid
-            isValid = false; // Set isValid to false if any input is invalid
+            input.style.borderColor = 'red'; 
+            isValid = false; 
         } else {
-            input.style.borderColor = ''; // Remove border if valid
+            input.style.borderColor = ''; 
         }
     });
-
     return isValid;
 }
-
-
-
-
-// ///////////////////////////////
-// function addEntryRow(headers) {  
-//     const tableContainer = document.getElementById('entriesTableContainer');
-//     const table = tableContainer.querySelector('table');
-//     const newRow = document.createElement('tr');
-//     headers.forEach(header => {
-//         let newCell = document.createElement('td');
-//         if (header === 'number') {
-//             newCell.innerHTML = `${newRowNumbers.entries}`;
-//         } else if (header === 'teamName') {
-//             newCell.innerHTML = `<select class="teamSelect" required></select>`;
-//         } else if (header === 'scheduleNumber') {
-//             newCell.innerHTML = `<input type="number" class="scheduleNumber" min="1" max="999" required>
-//                                 <div class="category" style="display: none;"></div>`;
-//         } else if (header === 'scheduleDate') {
-//             newCell.innerHTML = `<span class="scheduleDate"></span>`;
-//         } else if (header === 'eventCode') {
-//             newCell.innerHTML = `<span class="eventCode"></span>`;
-//         } else if (header === 'eventName') {
-//             newCell.innerHTML = `<span class="eventName"></span>`;
-//         } else if (header === 'priceCode') {
-//             newCell.innerHTML = `<span class="priceCode"></span>`;
-//         } else if (header === 'price') {
-//             newCell.innerHTML = `<span class="price"></span>`;
-//         } else if (header === 'riderName') {
-//             newCell.innerHTML = `<select class="riderSelect" required></select>`;
-//         } else if (header === 'riderRegNumber') {
-//             newCell.innerHTML = `<span class="riderSelectRegNumber"></span>`;
-//         } else if (header === 'horseName') {
-//             newCell.innerHTML = `<select class="horseSelect" required></select>`;
-//         } else if (header === 'horseRegNumber') {
-//             newCell.innerHTML = `<span class="horseSelectRegNumber"></span>`;
-//         } else if (header === 'comment') {
-//             newCell.innerHTML = `<textarea class="entryComment" rows="1" cols="15" placeholder="選択：2A、OP、等"></textarea>`;
-//             //newCell.setAttribute('contenteditable', 'true');
-//         } else {
-//             newCell.innerHTML = ``;
-//         }
-//         newRow.appendChild(newCell);
-//     });
-//     table.appendChild(newRow);
-//     updateSelectOptions();
-
-//     // Change the '追加' button to 'Update Table'
-//     const addButton = tableContainer.querySelector('.addEntryRowButton');
-//     addButton.textContent = '更新';
-//     newRowNumbers.entries += 1;
-//     addButton.removeEventListener('click', handleAddEntryRow);
-//     addButton.addEventListener('click', () => {
-//         if (validateRow(newRow)) {
-//             addButton.textContent = '追加';
-//             addButton.addEventListener('click', handleAddEntryRow);
-//         } else {
-//             alert('Please fill in all cells.');
-//         }
-//     });
-// }
-
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 async function loadEventCSV() {
     try {
-        const response = await fetch('仮日程.csv'); // Make sure the path is correct
+        const response = await fetch('仮日程.csv'); 
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const text = await response.text();
         const lines = text.trim().split('\n');
-        //const events = {}; // This assumes 'events' is not already declared elsewhere
         for (const line of lines) {
             const [scheduleNumber, scheduleDate, eventNumber, category, eventCode,
                   eventName, eventDescription, priceCode, price] = line.split(',');
@@ -707,82 +594,6 @@ async function loadEventCSV() {
         console.error('Error loading the CSV file:', error);
     }
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////
-function displayEntryForm(updatedData) {
-    document.getElementById('addEntryButton').addEventListener('click', function() {
-        //const entryContainer = document.getElementById('eventForm');
-        const eventForm = document.getElementById('eventForm');
-        const entryContainer = eventForm.querySelector('.entry-container'); 
-        const lastEntry = entryContainer ? entryContainer.lastElementChild : null;
-        const errorMessage = document.getElementById('error-message-entry');
-
-        if (lastEntry) {
-            const inputs = lastEntry.querySelectorAll('input[required], select[required]');
-            const isValid = validateLastInputs(inputs, errorMessage);
-            if (!isValid) {
-                return;
-            }
-        }
-        const entryDiv = document.createElement('div');
-        entryDiv.className = 'entry';
-        const entryNumber = document.querySelectorAll('.entry').length + 1;
-        // let charDisplayId = 'entryNumberCharDisplay' + (entryNumber - 1);
-        // const entryNumberCharDisplay = document.getElementById(charDisplayId);
-        // if (entryNumberCharDisplay) {
-        //     entryNumberCharDisplay.textContent = 'C'.repeat(entryNumber - 1);
-        // }
-        // charDisplayId = 'entryNumberCharDisplay' + (entryNumber);
-        entryDiv.innerHTML = `
-            
-            <div class="entryNumberLine">
-                <div class="entryNumber">${entryNumber}</div>
-            </div>
-
-            <div class="entry-fields">
-                <div>
-                    <label for="scheduleNumber">競技番号</label>
-                    <input type="number" class="scheduleNumber" min="1" max="999" required>
-                    <span class="eventInfoDisplay"></span>
-                    <div class="scheduleDate" style="display: none;"></div>
-                    <div class="category" style="display: none;"></div>
-                    <div class="eventCode" style="display: none;"></div>
-                    <div class="eventName" style="display: none;"></div>
-                    <div class="priceCode" style="display: none;"></div>
-                    <div class="price" style="display: none;"></div>
-                </div>
-                <div>
-                    <label for="teamSelect">所属</label>
-                    <select class="teamSelect" required></select>
-                </div>
-                <div>
-                    <label for="riderSelect">選手名</label>
-                    <select class="riderSelect" required></select>
-                    <div class="riderSelectRegNumber" style="display: none;"></div>
-                </div>
-                <div>
-                    <label for="horseSelect">馬名</label>
-                    <select class="horseSelect" required></select>
-                    <div class="horseSelectRegNumber" style="display: none;"></div>
-                </div>
-                <div>
-                    <label for="entryComment">備考</label>
-                    <textarea class="entryComment" rows="1" placeholder="選択馬場種目名：2A、OP、等"></textarea>
-                </div>
-            </div>
-        `;
-        // if (!entryContainer) {
-        //     const newEntryContainer = document.createElement('div');
-        //     newEntryContainer.className = 'entry'; //-container
-        //     eventForm.appendChild(newEntryContainer);
-        //     newEntryContainer.appendChild(entryDiv);
-        // } else {
-        //     entryContainer.appendChild(entryDiv);
-        // }
-
-        entryContainer.appendChild(entryDiv);
-        updateSelectOptions(updatedData);
-    });
-}
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 function updateSelectOptions() {
     const teamSelects = document.querySelectorAll('.teamSelect');
@@ -800,14 +611,9 @@ function updateSelectOptions() {
     scheduleNumbers.forEach(input => {
         input.addEventListener('input', function() {
             const parentElement = this.closest('.entriesTableContainer > table > tr'); // Find the closest parent container
-            
-            //const parentElement = this.closest('.entryNumberLine'); // Find the closest parent container
-            //const parentElement = this.closest('.entry-fields'); // Find the closest parent container
             const scheduleNumber = this.value.trim();
-            
             if (events[scheduleNumber]) {
                 const eventData = events[scheduleNumber];
-                //parentElement.querySelector('.eventInfoDisplay').textContent = `${eventData.scheduleDate} : ${eventData.eventCode} : ${eventData.eventName}`; //(${eventData.priceCode})
                 parentElement.querySelector('.eventName').textContent = eventData.eventName;
                 parentElement.querySelector('.scheduleDate').textContent = eventData.scheduleDate;
                 parentElement.querySelector('.category').value = eventData.category;
@@ -815,7 +621,6 @@ function updateSelectOptions() {
                 parentElement.querySelector('.priceCode').textContent = eventData.priceCode;
                 parentElement.querySelector('.price').textContent = eventData.price.toString();
             } else {
-                //parentElement.querySelector('.eventInfoDisplay').textContent = 'Event not found';
                 parentElement.querySelector('.eventName'). textContent= '';
                 parentElement.querySelector('.scheduleDate').textContent = '';
                 parentElement.querySelector('.category').textContent = '';
@@ -829,7 +634,7 @@ function updateSelectOptions() {
     const riderSelects = document.querySelectorAll('.riderSelect');
     riderSelects.forEach(select => {
         const selectedValue = select.value;
-        select.innerHTML = ''; // Clear previous options
+        select.innerHTML = ''; 
         updatedData.riders.forEach(rider => {
             const option = document.createElement('option');
             option.value = rider.riderName;
@@ -837,32 +642,26 @@ function updateSelectOptions() {
             option.setAttribute('data-reg-number', rider.riderRegNumber);
             select.appendChild(option);
         });
-        select.value = selectedValue; // Restore the selected value
-        // Set up the change event listener
+        select.value = selectedValue; 
         select.addEventListener('change', function() {
-            // Get the currently selected option
             const selectedOption = select.options[select.selectedIndex];
             if (selectedOption) {
-                // Get registration number from the selected option
                 const regNumber = selectedOption.getAttribute('data-reg-number');
-                // Navigate to the next table cell from the current cell (parent of select)
                 const nextTableCell = select.parentElement.nextElementSibling;
                 if (nextTableCell) {
-                    // Find the span within the next table cell
                     const regNumberSpan = nextTableCell.querySelector('.riderSelectRegNumber');
                     if (regNumberSpan) {
                         regNumberSpan.textContent = regNumber;
                     } else {
-                        console.error('Reg number span not found in the next table cell');
+                        //console.error('Reg number span not found in the next table cell');
                     }
                 } else {
-                    console.error('Next table cell not found');
+                    //console.error('Next table cell not found');
                 }
             } else {
-                console.error('Selected option is undefined');
+                //console.error('Selected option is undefined');
             }
         });
-        // Manually trigger the change event to initialize the display
         const event = new Event('change');
         select.dispatchEvent(event);
     });
@@ -870,7 +669,7 @@ function updateSelectOptions() {
     const horseSelects = document.querySelectorAll('.horseSelect');
     horseSelects.forEach(select => {
         const selectedValue = select.value;
-        select.innerHTML = ''; // Clear previous options
+        select.innerHTML = ''; 
         updatedData.horses.forEach(horse => {
             const option = document.createElement('option');
             option.value = horse.horseName;
@@ -878,47 +677,30 @@ function updateSelectOptions() {
             option.setAttribute('data-reg-number', horse.horseRegNumber);
             select.appendChild(option);
         });
-        select.value = selectedValue; // Restore the selected value
-        // Set up the change event listener
+        select.value = selectedValue; 
         select.addEventListener('change', function() {
-            // Get the currently selected option
             const selectedOption = select.options[select.selectedIndex];
             if (selectedOption) {
-                // Get registration number from the selected option
                 const regNumber = selectedOption.getAttribute('data-reg-number');
-                // Navigate to the next table cell from the current cell (parent of select)
                 const nextTableCell = select.parentElement.nextElementSibling;
                 if (nextTableCell) {
-                    // Find the span within the next table cell
                     const regNumberSpan = nextTableCell.querySelector('.horseSelectRegNumber');
                     if (regNumberSpan) {
                         regNumberSpan.textContent = regNumber;
                     } else {
-                        console.error('Reg number span not found in the next table cell');
+                        //console.error('Reg number span not found in the next table cell');
                     }
                 } else {
-                    console.error('Next table cell not found');
+                    //console.error('Next table cell not found');
                 }
             } else {
-                console.error('Selected option is undefined');
+                //console.error('Selected option is undefined');
             }
         });
-        // Manually trigger the change event to initialize the display
         const event = new Event('change');
         select.dispatchEvent(event);
     });
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-// function validateLastInputs(inputs, errorMessage) {
-//     let isValid = true;
-//     inputs.forEach(input => {
-//         if (!input.value) {
-//             isValid = false;
-//             errorMessage.textContent = "Please fill out all required fields.";
-//         }
-//     });
-//     return isValid;
-// }
 
 
 

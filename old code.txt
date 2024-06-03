@@ -826,3 +826,7 @@ function addEntryRow(headers) {
 }
 Created a function that checks that each cell has a valid value. entryComment can be blank. If all the values are not 
 filled, if possible, place a red border around the cell that is still missing input.
+
+
+
+

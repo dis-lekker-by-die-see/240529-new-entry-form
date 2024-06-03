@@ -72,7 +72,7 @@ select, button {
 .codeInput {
     width: 100%;
     border-radius: 8px;
-    padding: 0px;
+    padding-left: 10px;
 }
 
 
@@ -108,24 +108,6 @@ select, button {
 }
 */
 /*------- Select Club --------------------------------------------------------------------*/
-/*table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-}
-th, td {
-    border: 1px solid black;
-    padding: 8px;
-    text-align: left;
-}
-th {
-    background-color: #f2f2f2;
-}
-.table-container {
-    display: none;
-}
-*/
-
 p {
     font-size: 0.8em;
     /*margin: 1% auto;
@@ -133,13 +115,11 @@ p {
 }
 
 table {
-    
     border-collapse: collapse;
     margin-top: 10px;
     /*table-layout: fixed;
     */width: 100%;
     min-width: 1000px; 
-    
 }
 
 th, td {
@@ -178,9 +158,6 @@ tr:hover {
 .entriesTableContainer > table {
     min-width: 1400px; 
 }
-
-
-
 
 .entryNumber {
     font-size: 1.1em;
@@ -228,11 +205,16 @@ label {
 }
 
 .entryComment {
-    
     max-width: 100%;
-    padding: 7px;
+    padding: 5px;
     box-sizing: border-box;
     resize: none;
+}
+
+.addEntryRowButton {
+    display: flex;
+    margin: 10px auto; 
+    width: auto;
 }
 
 /*.entry {
