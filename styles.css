@@ -72,7 +72,7 @@ select, button {
 .codeInput {
     width: 100%;
     border-radius: 8px;
-    padding: 0px;
+    padding-left: 10px;
 }
 
 
@@ -108,24 +108,6 @@ select, button {
 }
 */
 /*------- Select Club --------------------------------------------------------------------*/
-/*table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-}
-th, td {
-    border: 1px solid black;
-    padding: 8px;
-    text-align: left;
-}
-th {
-    background-color: #f2f2f2;
-}
-.table-container {
-    display: none;
-}
-*/
-
 p {
     font-size: 0.8em;
     /*margin: 1% auto;
@@ -133,12 +115,11 @@ p {
 }
 
 table {
-    
-    /*border-collapse: collapse;
-    */margin-top: 10px;
-    
-    width: 100%;
-    min-width: 800px; 
+    border-collapse: collapse;
+    margin-top: 10px;
+    /*table-layout: fixed;
+    */width: 100%;
+    min-width: 1000px; 
 }
 
 th, td {
@@ -167,17 +148,16 @@ tr:hover {
     margin-top: 1%;
 }
 
-.clubInfoContainer {
-    
+.clubInfoContainer, .entriesContainer {
     overflow-x: auto;
     width: 100%;
     -webkit-overflow-scrolling: touch;
-    /*padding: 5px;
-    border: 1px solid #ccc;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    */
 }
 /*///////////////////////////////////////////////////////////////////////////////////////////*/
+
+.entriesTableContainer > table {
+    min-width: 1400px; 
+}
 
 .entryNumber {
     font-size: 1.1em;
@@ -213,7 +193,7 @@ label {
     border-radius: 8px;
     box-sizing: border-box;
     transition: all 0.3s ease;
-    width: 100px; 
+    width: auto; 
 }
 
 .eventInfoDisplay {
@@ -225,16 +205,25 @@ label {
 }
 
 .entryComment {
-    width: 100%;
-    padding: 7px;
+    max-width: 100%;
+    height: fit-content;
+    padding: 5px;
+    box-sizing: border-box;
+    resize: none;
 }
 
-.entry {
+.addEntryRowButton {
+    display: flex;
+    margin: 10px auto; 
+    width: auto;
+}
+
+/*.entry {
     margin-bottom: 10px;
     padding: 10px;
     padding-right: 25px;
     /*background-color: #f9f9f9;
-    */
+    
     background-color: rgb(251, 234, 237);
     border: 1px solid #e1e1e1;
     border-radius: 12px;
@@ -271,3 +260,4 @@ label {
         flex: 1 1 calc(100% - 15px);
     }
 }
+*/
