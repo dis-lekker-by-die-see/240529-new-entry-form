@@ -43,11 +43,20 @@ function processClubSelection(clubData) {
         } else if (selectedClub !== "") {
             codeInput.style.display = 'block';
             submitButton.style.display = 'block';
+            codeInput.focus();
         } //else {
         //     codeInput.style.display = 'block'; //'none';
         //     submitButton.style.display = 'none';
         // }
     });
+
+
+   
+    
+    // codeInput.addEventListener('keypress', handlecodeInput);
+    // submitButton.addEventListener('click', handlecodeInput);
+
+
     submitButton.addEventListener('click', function() {
         const selectedClub = clubSelect.value;
         const inputCode = codeInput.value;
@@ -63,7 +72,15 @@ function processClubSelection(clubData) {
             codeInput.style.border = '2px solid red';
         }
     });
+    // codeInput.addEventListener('keypress', function(event) {
+    //     if (event.key === "Enter") {
+    //         event.preventDefault(); 
+    //         submitButton.click(); 
+    //     }
+    // });
 }
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 //              Read data
 async function fetchAndParseJSON(file, canEdit) {
@@ -468,6 +485,7 @@ function displayEntries() {
     tableContainer.innerHTML = tableHTML;
     tableContainer.style.display = 'block';
     document.getElementById('addEntryRow').addEventListener('click', handleAddEntryRow);
+
 }
 //////////////////////////////
 function handleAddEntryRow(event) {
@@ -605,6 +623,7 @@ function updateSelectOptions() {
             option.textContent = team.teamName;
             select.appendChild(option);
         });
+        select.focus();
     });
     /////////////////////////////////////////////////////////////////////
     const scheduleNumbers = document.querySelectorAll('.scheduleNumber');
