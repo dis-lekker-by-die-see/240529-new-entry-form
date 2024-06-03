@@ -493,13 +493,16 @@ document.getElementById('updateButton').addEventListener('click', function() {
 
 
 
+        loadEventCSV();
+        updateSelectOptions(updatedData);
 
         const eventForm = document.getElementById('eventForm');
         const addEntryButton = document.getElementById('addEntryButton');
         eventForm.style.display = 'block';
         addEntryButton.style.display = 'block';
 
-        // displayEntries(updatedData, true);
+        
+       
 
         displayEntryForm(updatedData);
     }
@@ -511,7 +514,46 @@ function displayEntryForm(updatedData) {}
 
 
 
-// ///////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+async function loadEventCSV() {
+    try {
+        const response = await fetch('仮日程.csv'); // Make sure the path is correct
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const text = await response.text();
+        const lines = text.trim().split('\n');
+        const events = {}; // This assumes 'events' is not already declared elsewhere
+
+        for (const line of lines) {
+            const [scheduleNumber, scheduleDate, eventNumber, category, eventCode,
+                  eventName, eventDescription, priceCode, price] = line.split(',');
+
+            if (scheduleDate && scheduleNumber && eventName) {
+                events[scheduleNumber.trim()] = {
+                    scheduleDate: scheduleDate.trim(),
+                    eventName: eventName.trim(),
+                    category: category.trim(),
+                    eventCode: eventCode.trim(),
+                    eventDescription: eventDescription.trim(),
+                    priceCode: priceCode.trim(),
+                    price: parseFloat(price.trim())
+                };
+            }
+        }
+
+        console.log('Events loaded:', events); // For debugging purposes
+    } catch (error) {
+        console.error('Error loading the CSV file:', error);
+    }
+}
+
+
+
+
+
+
 // function displayEntryForm(updatedData) {
 //     document.getElementById('addEntryButton').addEventListener('click', function() {
 //         const eventForm = document.getElementById('eventForm');
@@ -583,41 +625,41 @@ function displayEntryForm(updatedData) {}
 //         updateSelectOptions(updatedData);
 //     });
 // }
-// function updateSelectOptions(updatedData) {
-//     const teamSelects = document.querySelectorAll('.teamSelect');
-//     const riderSelects = document.querySelectorAll('.riderSelect');
-//     const horseSelects = document.querySelectorAll('.horseSelect');
+function updateSelectOptions(updatedData) {
+    const teamSelects = document.querySelectorAll('.teamSelect');
+    const riderSelects = document.querySelectorAll('.riderSelect');
+    const horseSelects = document.querySelectorAll('.horseSelect');
 
-//     teamSelects.forEach(select => {
-//         select.innerHTML = '';
-//         updatedData.teams.forEach(team => {
-//             const option = document.createElement('option');
-//             option.value = team.teamName;
-//             option.textContent = team.teamName;
-//             select.appendChild(option);
-//         });
-//     });
+    teamSelects.forEach(select => {
+        select.innerHTML = '';
+        updatedData.teams.forEach(team => {
+            const option = document.createElement('option');
+            option.value = team.teamName;
+            option.textContent = team.teamName;
+            select.appendChild(option);
+        });
+    });
 
-//     riderSelects.forEach(select => {
-//         select.innerHTML = '';
-//         updatedData.riders.forEach(rider => {
-//             const option = document.createElement('option');
-//             option.value = rider.riderName;
-//             option.textContent = rider.riderName;
-//             select.appendChild(option);
-//         });
-//     });
+    riderSelects.forEach(select => {
+        select.innerHTML = '';
+        updatedData.riders.forEach(rider => {
+            const option = document.createElement('option');
+            option.value = rider.riderName;
+            option.textContent = rider.riderName;
+            select.appendChild(option);
+        });
+    });
 
-//     horseSelects.forEach(select => {
-//         select.innerHTML = '';
-//         updatedData.horses.forEach(horse => {
-//             const option = document.createElement('option');
-//             option.value = horse.horseName;
-//             option.textContent = horse.horseName;
-//             select.appendChild(option);
-//         });
-//     });
-// }
+    horseSelects.forEach(select => {
+        select.innerHTML = '';
+        updatedData.horses.forEach(horse => {
+            const option = document.createElement('option');
+            option.value = horse.horseName;
+            option.textContent = horse.horseName;
+            select.appendChild(option);
+        });
+    });
+}
 
 // function validateLastInputs(inputs, errorMessage) {
 //     let isValid = true;

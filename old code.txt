@@ -425,3 +425,313 @@ change the function so that it also checks that a selection has been made.
 
 
 Number,teamName,scheduleNumber,scheduleDate,category,eventCode,eventName,priceCode,riderName,riderRegNumber,horseName,horseRegNumber,comment"
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+document.getElementById('updateButton').addEventListener('click', function() {
+    const tableContainers = ['clubTableContainer', 'teamsTableContainer', 'horsesTableContainer', 'ridersTableContainer'];
+    const updatedData = {};
+    let isEmptyTable = false;
+    tableContainers.forEach(containerId => {
+        const tableName = containerId.replace(/TableContainer/i, '');  // 'i' makes it case-insensitive
+        if (tableName == 'club') {
+            headers = [
+                "clubName",
+                "registrationOfficer",
+                "mobile",
+                "phone",
+                "email",
+                "fax",
+                "address"
+            ]
+        } else if (tableName == 'teams') {
+            headers = [
+                "number",
+                "teamName"
+            ]
+        } else if (tableName == 'horses') {
+            headers = [
+                "number",
+                "horseName",
+                "horseNameFurigana",
+                "horseRegNumber",
+                "horseSex",
+                "horseAge",
+                "horseColor",
+                "horseBreed",
+                "horseOrigin",
+                "horseOwner"
+            ]
+        } else if (tableName == 'riders') {
+            headers = [
+                "number",
+                "riderName",
+                "riderNameFurigana",
+                "riderRegNumber",
+                "riderSex"
+            ]
+        }
+        const table = document.getElementById(containerId).querySelector('table');
+        let rows = [];
+        if (wasNewClubOptionSelected) {
+            rows = Array.from(table.rows).slice(2); // Skip the header row dummy info row
+        } else {
+            rows = Array.from(table.rows).slice(1); // Skip the header row
+        }
+        let cells = []; 
+        const data = rows.map(row => {
+            if (wasNewClubOptionSelected) {
+                cells = Array.from(row.cells);            
+            } else {
+                cells = Array.from(row.cells);//.slice(0, -1); // Exclude the last cell of each row
+            }
+            return cells.reduce((obj, cell, index) => {
+                const select = cell.querySelector('select');
+                if (select) {
+                    obj[headers[index]] = select.value;
+                } else {
+                    obj[headers[index]] = cell.textContent.trim();
+                }
+                return obj;
+            }, {});
+        }).filter(row => !Object.values(row).some(value => value === ''));
+        if (data.length === 0) {
+            isEmptyTable = true;
+        } else {
+            updatedData[tableName] = data;
+        }
+    });
+    if (isEmptyTable) {
+        const userChoice = confirm("One or more tables have no valid data rows. Click 'Cancel' to go back and edit, or 'OK' to reload the page.");
+        if (userChoice) {
+            window.location.reload(); 
+        } else {
+            return;
+        }
+    } else {
+        console.log('Updated Data:', updatedData);
+    }
+});
+
+The code above creates a data object(?) called 'updatedData'. The html below is an example of an entry form with dropdown menus.
+Create an entry <div> very similar to the below code that extracts a list of teams, horses and riders from updatedData, 
+and populates the dropdown menus inside the form, so that the user can select teams, horses and riders for each event.
+The events data must be handled similarly to the EventListener and loadEventCSV() below. The user chooses a number in the form,
+and the form displays which event it is. The getElementById 'addEntryButton' code below shows how entries are added to the form.
+In the end all the entries should be appended to the updatedData object, in the structure shown at the very bottom. 
+
+
+<div class="entry">
+                    <div class="entryNumberLine">
+                        <div class="entryNumber">1</div>
+                    </div>
+                    <div class="entry-fields">
+                        <div>
+                            <label for="teamSelect">所属</label>
+                            <select class="teamSelect" required></select>
+                        </div>
+                        <div>
+                            <label for="scheduleNumber">競技番号</label>
+                            <input type="number" class="scheduleNumber" min="1" max="999" required>
+                            <span class="eventInfoDisplay"></span>
+                            <div class="scheduleDate" style="display: none;"></div>
+                            <div class="category" style="display: none;"></div>
+                            <div class="eventCode" style="display: none;"></div>
+                            <div class="eventName" style="display: none;"></div>
+                            <div class="priceCode" style="display: none;"></div>
+                            <div class="price" style="display: none;"></div>
+                        </div>
+                        <div>
+                            <label for="riderSelect">選手名</label>
+                            <select class="riderSelect" required></select>
+                            <div class="riderSelectRegNumber" style="display: none;"></div>
+                        </div>
+                        <div>
+                            <label for="horseSelect">馬名</label>
+                            <select class="horseSelect" required></select>
+                            <div class="horseSelectRegNumber" style="display: none;"></div>
+                        </div>
+                        <div>
+                            <label for="entryComment">備考</label>
+                            <textarea class="entryComment" rows="2" placeholder="選択馬場種目名：2A、OP、等"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+////////////////////////////////////////////////////////////////////////////
+                document.addEventListener('DOMContentLoaded', function() {
+    fetch('仮日程.csv') // The file is in the same directory
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.text();
+        })
+        .then(text => {
+            const lines = text.trim().split('\n');
+            if (lines.length === 0) return;
+
+            // Populate the table with data rows
+            for (let i = 1; i < lines.length; i++) {
+                
+                const cells = lines[i].split(',');
+                
+                // Populate the events object
+                const [scheduleNumber, scheduleDate, eventNumber, category, eventCode,
+                    eventName, eventDescription, priceCode, price] = cells;
+
+                if (scheduleDate && scheduleNumber && eventName) {
+                    events[scheduleNumber.trim()] = {
+                        scheduleDate: scheduleDate.trim(),
+                        eventName: eventName.trim(),
+                        category: category ? category.trim() : '',
+                        eventCode: eventCode ? eventCode.trim() : '',
+                        eventDescription: eventDescription ? eventDescription.trim() : '',
+                        priceCode: priceCode ? priceCode.trim() : '',
+                        price: price ? parseFloat(price.trim()) : ''
+                    };
+                }
+            }
+
+            console.log('Events loaded:', events); // For debugging purposes
+
+            
+        })
+        .catch(error => console.error('Error loading the CSV file:', error));
+});
+
+///////////////////////////////////////
+function loadEventCSV() {
+
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch('仮日程.csv') //'/仮日程.csv'
+            .then(response => response.text())
+            .then(text => {
+
+                const lines = text.trim().split('\n');
+                lines.forEach(line => {
+                    const [scheduleNumber, scheduleDate, eventNumber, category, eventCode,
+                        eventName, eventDescription, priceCode, price] = line.split(',');
+                if (scheduleDate && scheduleNumber && eventName) {
+                    events[scheduleNumber.trim()] = {
+                        scheduleDate: scheduleDate.trim(),
+                        eventName: eventName.trim(),
+                        category: category.trim(),
+                        eventCode: eventCode.trim(),
+                        eventDescription: eventDescription.trim(),
+                        priceCode: priceCode.trim(),
+                        price: parseFloat(price.trim())
+                    };
+                }
+            });
+            console.log('Events loaded:', events); // For debugging purposes
+            })
+            .catch(error => console.error('Error loading the CSV file:', error));
+    });
+}
+
+document.getElementById('addEntryButton').addEventListener('click', function() {
+    const eventForm = document.getElementById('eventForm');
+    const entryContainer = eventForm.querySelector('.entry-container');
+    const lastEntry = entryContainer ? entryContainer.lastElementChild : null;
+    const errorMessage = document.getElementById('error-message-entry');
+
+    if (lastEntry) {
+        const inputs = lastEntry.querySelectorAll('input[required], select[required]');
+        const isValid = validateLastInputs(inputs,errorMessage);
+        if (!isValid) {
+            return;
+        }
+    }
+    const entryDiv = document.createElement('div');
+    entryDiv.className = 'entry';
+    const entryNumber = document.querySelectorAll('.entry').length + 1;
+    let charDisplayId = 'entryNumberCharDisplay' + (entryNumber - 1);
+    const entryNumberCharDisplay = document.getElementById(charDisplayId);
+    entryNumberCharDisplay.textContent = 'C'.repeat(entryNumber - 1);
+    charDisplayId = 'entryNumberCharDisplay' + (entryNumber);
+    entryDiv.innerHTML = `
+        <div class="entryNumberLine">
+            <div class="entryNumber">${entryNumber}</div>
+            <div id="${charDisplayId}" class="entryNumberChar">_</div>
+        </div>
+        <div class="entry-fields">
+            <div>
+                <label for="teamSelect">所属</label>
+                <select class="teamSelect" required></select>
+            </div>
+            <div>
+                <label for="scheduleNumber">競技番号</label>
+                <input type="number" class="scheduleNumber" min="1" max="999" required>
+                <span class="eventInfoDisplay"></span>
+                <div class="scheduleDate" style="display: none;"></div>
+                <div class="category" style="display: none;"></div>
+                <div class="eventCode" style="display: none;"></div>
+                <div class="eventName" style="display: none;"></div>
+                <div class="priceCode" style="display: none;"></div>
+                <div class="price" style="display: none;"></div>
+            </div>
+            <div>
+                <label for="riderSelect">選手名</label>
+                <select class="riderSelect" required></select>
+                <div class="riderSelectRegNumber" style="display: none;"></div>
+            </div>
+            <div>
+                <label for="horseSelect">馬名</label>
+                <select class="horseSelect" required></select>
+                <div class="horseSelectRegNumber" style="display: none;"></div>
+            </div>
+            <div>
+                <label for="entryComment">備考</label>
+                <textarea class="entryComment" rows="2" placeholder="選択馬場種目名：2A、OP、等"></textarea>
+            </div>
+        </div>
+    `;
+    if (!entryContainer) {
+        const newEntryContainer = document.createElement('div');
+        newEntryContainer.className = 'entry-container';
+        eventForm.appendChild(newEntryContainer);
+        newEntryContainer.appendChild(entryDiv);
+    } else {
+        entryContainer.appendChild(entryDiv);
+    }
+    updateSelectOptions();
+});
+
+
+///////////////////
+{"entries": [
+    {
+      "number": "1",
+      "teamName":"大山乗馬センター",
+      "scheduleNumber": "1",
+      "scheduleDate": "2024-05-16",
+      "category": "2",
+      "eventCode": "FS120",
+      "eventName": "フレンドシップ120",
+      "priceCode": "フレンドシップ",
+      "riderName": "吉田 桃",
+      "riderRegNumber": "32536",
+      "horseName":"リグヴェーダ",
+      "horseRegNumber":"58280",
+      "comment": ""
+    }],
+    "fees": [
+    {
+      "feeItem": "馬",
+      "feeCount": "0",
+      "feeAmount": "0"
+    }]}
+
+///////////////////////////////////////////////////////////////////
+html:
+<form id="eventForm" style="display: none;">
+
+js:
+const eventForm = document.getElementById('eventForm');
+eventForm.style.display = 'block';
+        
+error:
+script.js:499 Uncaught TypeError: Cannot read properties of null (reading 'style')
+    at HTMLButtonElement.<anonymous> (script.js:499:19)
