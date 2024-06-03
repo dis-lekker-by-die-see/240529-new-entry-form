@@ -827,6 +827,90 @@ function addEntryRow(headers) {
 Created a function that checks that each cell has a valid value. entryComment can be blank. If all the values are not 
 filled, if possible, place a red border around the cell that is still missing input.
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+{
+    "club": [ 
+      {
+        "clubName": "大山乗馬センター",
+        "registrationOfficer": "北垣",
+        "mobile": "90",
+        "phone": "859",
+        "email": "mail@",
+        "fax": "859",
+        "address": "大山"
+      }
+    ],
+    "teams": [
+      {
+        "number": "1",
+        "teamName": "大山乗馬センター",
+        "undefined": "X"
+      },
+      {
+        "number": "2",
+        "teamName": "鳥取大学馬術部",
+        "undefined": "X"
+      }
+    ],
+    "horses": [
+      {
+        "number": "1",
+        "horseName": "トーアレラ",
+        "horseNameFurigana": "トーアレラ",
+        "horseRegNumber": "60567",
+        "horseSex": "セン",
+        "horseAge": "12",
+        "horseColor": "芦毛",
+        "horseBreed": "サラブレッド",
+        "horseOrigin": "北海道",
+        "horseOwner": "北垣",
+        "undefined": "X"
+      },
+      {
+        "number": "3",
+        "horseName": "カジノプレイヤー",
+        "horseNameFurigana": "カジノプレイヤー",
+        "horseRegNumber": "58786",
+        "horseSex": "セン",
+        "horseAge": "?",
+        "horseColor": "鹿毛",
+        "horseBreed": "?",
+        "horseOrigin": "?",
+        "horseOwner": "?",
+        "undefined": "X"
+      }
+    ],
+    "riders": [
+      {
+        "number": "1",
+        "riderName": "北垣",
+        "riderNameFurigana": "キタガキ",
+        "riderRegNumber": "3679",
+        "riderSex": "男子",
+        "undefined": "X"
+      },
+      {
+        "number": "2",
+        "riderName": "加藤 友貴",
+        "riderNameFurigana": "カトウ ユウキ",
+        "riderRegNumber": "32871",
+        "riderSex": "男子",
+        "undefined": "X"
+      },
+      {
+        "number": "4",
+        "riderName": "定松 優芽",
+        "riderNameFurigana": "サダマツ ユメ",
+        "riderRegNumber": "0",
+        "riderSex": "男子",
+        "undefined": "X"
+      }
+    ]
+}
+
+Above is the data in global variable 'updatedData' below (except each key is not in ""). 
+
 
 
 

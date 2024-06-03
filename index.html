@@ -37,14 +37,20 @@
         <!---------------------------------------------------------------------------------------------->
         
         <div id="clubInfoContainer" class="clubInfoContainer" style="display: none;">
+            <h2>団体・乗馬クラブ / Organization・Riding Club</h2>
+            <div id="clubTableContainer" class="clubTableContainer"></div>
             
-            <div id="clubTableContainer" class="table-container"></div>
-            <div id="teamsTableContainer" class="table-container"></div>
-            <div id="horsesTableContainer" class="table-container"></div>
-            <div id="ridersTableContainer" class="table-container"></div>
+            <h4>チーム(所属) / Teams</h4>
+            <div id="teamsTableContainer" class="teamsTableContainer"></div>
+            
+            <h4>馬 / Horses</h4>
+            <div id="horsesTableContainer" class="horsesTableContainer"></div>
+            
+            <h4>選手 / Riders</h4>
+            <div id="ridersTableContainer" class="ridersTableContainer"></div>
             <hr>
             
-            <button id="updateButton">エントリーに進む</button>
+            <button id="updateButton" class="updateButton">エントリーに進む</button>
             <span> ＊上記の情報確認してエントリーに進みます。No data is saved anywhere. refresh the page if you need to start again.</span>
 
         </div>
@@ -52,10 +58,16 @@
         
         <div id="entriesContainer" class="entriesContainer" style="display: none;">
             <div id="entriesTableContainer" class="entriesTableContainer"></div>
-            <!----
+
+            <button id="addEntryRow" class="addEntryRowButton"
+            data-headers="number,teamName,scheduleNumber,scheduleDate,eventCode,eventName,riderName,riderRegNumber,horseName,horseRegNumber,priceCode,price,comment">追加</button>
+            
+            <hr>
             <button type="button" id="updateDataWithEntriesButton">create json file</button>
-            -->
+
         </div>
+        
+        
         <!---------------------------------------------------------------------------------------------->
     </div>
 

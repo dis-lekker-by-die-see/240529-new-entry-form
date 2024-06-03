@@ -68,15 +68,7 @@ function processClubSelection(clubData) {
             submitButton.click(); // Trigger the click event on the button
         }
     });
-    
-
-
-
-
-
 }
-
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 //              Read data
 async function fetchAndParseJSON(file, canEdit) {
@@ -113,9 +105,9 @@ async function fetchAndParseJSON(file, canEdit) {
 //          Display Tables 
 function displayClub(club, canEdit) {
     const tableContainer = document.getElementById('clubTableContainer');
-    let tableHTML = `<h2>団体・乗馬クラブ / Organization・Riding Club</h2>`;
+    let tableHTML = ``;
     if (wasNewClubOptionSelected) {
-        tableHTML += `<p>
+        tableHTML += `<p class="clubInfoTableText">
         下記のフォームを使用して、クラブの詳細、チーム、馬、選手を追加してください。
         <br>
         注意：新しいデータはここには保存されません。このフォームは、ダウンロード可能なファイルを生成し、そのファイルをメールで協会に送信する必要があります。
@@ -123,7 +115,7 @@ function displayClub(club, canEdit) {
         重要：ページをリフレッシュまたは再読み込みすると、すべての変更と新しいデータが失われます。
         </p>`;
     } else {
-        tableHTML += `<p>
+        tableHTML += `<p class="clubInfoTableText">
         以下は、岡山県馬術連盟が保有するクラブ情報の記録です。
         クラブ情報を最新の状態に保つために、下記のフォームを使用して更新してください。
         クラブ名と住所はここでは変更できません。
@@ -159,8 +151,8 @@ function displayClub(club, canEdit) {
 ///////////////////////////////////////
 function displayTeams(teams, canEdit) {
     const tableContainer = document.getElementById('teamsTableContainer');
-    let tableHTML = `<h4>チーム(所属) / Teams</h4>`;
-    tableHTML += `<p>
+    let tableHTML = ``;
+    tableHTML += `<p class="clubInfoTableText">
         いくつかの団体・乗馬クラブには複数の所属・チームがあります。例えば、(団体) 蒜山ホースパーク >> (所属) 蒜山ホースパーク、(団体) 蒜山ホースパーク >> (所属) 真庭市スポーツ少年団。
         <br>
         所属名・チームが団体名・乗馬クラブと同じ場合は、ここに団体名をもう一度追加してください。
@@ -194,7 +186,7 @@ function displayTeams(teams, canEdit) {
 /////////////////////////////////////////
 function displayHorses(horses, canEdit) {
     const tableContainer = document.getElementById('horsesTableContainer');
-    let tableHTML = `<h4>馬 / Horses</h4><table><tr><th>番</th><th>馬名</th><th>フリガナ</th><th>登録番号</th><th>性別</th><th>年齢</th><th>毛色</th><th>品種</th><th>産地</th><th>所有者</th>`;
+    let tableHTML = `<table><tr><th>番</th><th>馬名</th><th>フリガナ</th><th>登録番号</th><th>性別</th><th>年齢</th><th>毛色</th><th>品種</th><th>産地</th><th>所有者</th>`;
     if (canEdit) {
         tableHTML += `<th>削除</th></tr>`;
     } else {
@@ -231,7 +223,7 @@ function displayHorses(horses, canEdit) {
 /////////////////////////////////////////
 function displayRiders(riders, canEdit) {
     const tableContainer = document.getElementById('ridersTableContainer');
-    let tableHTML = `<h4>選手 / Riders</h4><table><tr><th>番</th><th>選手名</th><th>フリガナ</th><th>登録番号</th><th>性別</th>`;
+    let tableHTML = `<table><tr><th>番</th><th>選手名</th><th>フリガナ</th><th>登録番号</th><th>性別</th>`;
     if (canEdit) {
         tableHTML += `<th>削除</th></tr>`;
     } else {
@@ -476,8 +468,8 @@ function displayEntries() {
             <th>エントリー料</th>
             <th>備考</th>
         </tr></table>`;
-    tableHTML += `<button id="addEntryRow" class="addEntryRowButton" 
-    data-headers="number,teamName,scheduleNumber,scheduleDate,eventCode,eventName,riderName,riderRegNumber,horseName,horseRegNumber,priceCode,price,comment">追加</button>`;
+    //tableHTML += `<button id="addEntryRow" class="addEntryRowButton" 
+    //data-headers="number,teamName,scheduleNumber,scheduleDate,eventCode,eventName,riderName,riderRegNumber,horseName,horseRegNumber,priceCode,price,comment">追加</button>`;
     tableContainer.innerHTML = tableHTML;
     tableContainer.style.display = 'block';
     document.getElementById('addEntryRow').addEventListener('click', handleAddEntryRow);
@@ -726,61 +718,55 @@ document.getElementById('updateDataWithEntriesButton').addEventListener('click',
     //create json file for download
 
 
-    const tableContainers = ['clubTableContainer', 'teamsTableContainer', 'horsesTableContainer', 'ridersTableContainer'];
-    let isEmptyTable = false;
-    tableContainers.forEach(containerId => {
-        const tableName = containerId.replace(/TableContainer/i, '');  // 'i' makes it case-insensitive
-        if (tableName == 'club') {
-            headers = [
-                "clubName",
-                "registrationOfficer",
-                "mobile",
-                "phone",
-                "email",
-                "fax",
-                "address"
-            ]
-        } else if (tableName == 'teams') {
-            headers = [
-                "number",
-                "teamName"
-            ]
-        } else if (tableName == 'horses') {
-            headers = [
-                "number",
-                "horseName",
-                "horseNameFurigana",
-                "horseRegNumber",
-                "horseSex",
-                "horseAge",
-                "horseColor",
-                "horseBreed",
-                "horseOrigin",
-                "horseOwner"
-            ]
-        } else if (tableName == 'riders') {
-            headers = [
-                "number",
-                "riderName",
-                "riderNameFurigana",
-                "riderRegNumber",
-                "riderSex"
-            ]
-        }
-        const table = document.getElementById(containerId).querySelector('table');
+    // const tableContainers = ['entriesTableContainer'];
+    // let isEmptyTable = false;
+    // tableContainers.forEach(containerId => {
+    //     const tableName = containerId.replace(/TableContainer/i, '');  // 'i' makes it case-insensitive
+    //     if (tableName == 'club') {
+    //         headers = [
+    //             "clubName",
+    //             "registrationOfficer",
+    //             "mobile",
+    //             "phone",
+    //             "email",
+    //             "fax",
+    //             "address"
+    //         ]
+    //     } else if (tableName == 'teams') {
+    //         headers = [
+    //             "number",
+    //             "teamName"
+    //         ]
+    //     } else if (tableName == 'horses') {
+    //         headers = [
+    //             "number",
+    //             "horseName",
+    //             "horseNameFurigana",
+    //             "horseRegNumber",
+    //             "horseSex",
+    //             "horseAge",
+    //             "horseColor",
+    //             "horseBreed",
+    //             "horseOrigin",
+    //             "horseOwner"
+    //         ]
+    //     } else if (tableName == 'riders') {
+    //         headers = [
+    //             "number",
+    //             "riderName",
+    //             "riderNameFurigana",
+    //             "riderRegNumber",
+    //             "riderSex"
+    //         ]
+    //     }
+        const table = document.getElementById('.entriesTableContainer').querySelector('table');
         let rows = [];
-        if (wasNewClubOptionSelected) {
-            rows = Array.from(table.rows).slice(2); // Skip the header row & dummy info row
-        } else {
-            rows = Array.from(table.rows).slice(1); // Skip the header row
-        }
+        
+        //rows = Array.from(table.rows).slice(1); // Skip the header row
+        
         let cells = []; 
         const data = rows.map(row => {
-            if (wasNewClubOptionSelected) {
-                cells = Array.from(row.cells);            
-            } else {
-                cells = Array.from(row.cells);//.slice(0, -1); // Exclude the last cell of each row
-            }
+            cells = Array.from(row.cells);  
             return cells.reduce((obj, cell, index) => {
                 const select = cell.querySelector('select');
                 if (select) {
@@ -796,7 +782,7 @@ document.getElementById('updateDataWithEntriesButton').addEventListener('click',
         } else {
             updatedData[tableName] = data;
         }
-    });
+    //});
     if (isEmptyTable) {
         const userChoice = confirm("One or more tables have no valid data rows. Click 'Cancel' to go back and edit, or 'OK' to reload the page.");
         if (userChoice) {

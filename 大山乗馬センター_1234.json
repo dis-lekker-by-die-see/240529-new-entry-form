@@ -13,7 +13,8 @@
   "teams": [
     {
       "number": "1",
-      "teamName": "大山乗馬センター"
+      "teamName": "大山乗馬センター",
+      "undefined": "X"
     },
     {
       "number": "2",
