@@ -49,14 +49,6 @@ function processClubSelection(clubData) {
         //     submitButton.style.display = 'none';
         // }
     });
-
-
-   
-    
-    // codeInput.addEventListener('keypress', handlecodeInput);
-    // submitButton.addEventListener('click', handlecodeInput);
-
-
     submitButton.addEventListener('click', function() {
         const selectedClub = clubSelect.value;
         const inputCode = codeInput.value;
@@ -65,19 +57,23 @@ function processClubSelection(clubData) {
             clubSelectContainer.style.display = 'none';
             const clubInfoContainer = document.getElementById('clubInfoContainer');
             clubInfoContainer.style.display = 'block';
-
             fetchAndParseJSON(club.fileName, true);
-
         } else {
             codeInput.style.border = '2px solid red';
         }
     });
-    // codeInput.addEventListener('keypress', function(event) {
-    //     if (event.key === "Enter") {
-    //         event.preventDefault(); 
-    //         submitButton.click(); 
-    //     }
-    // });
+    codeInput.addEventListener('keypress', function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault(); 
+            submitButton.click(); // Trigger the click event on the button
+        }
+    });
+    
+
+
+
+
+
 }
 
 
