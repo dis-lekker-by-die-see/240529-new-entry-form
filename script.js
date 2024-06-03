@@ -252,40 +252,7 @@ function displayRiders(riders, canEdit) {
     });
     document.getElementById('addRiderRow').addEventListener('click', handleAddRow);
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//          Entries 
-function displayEntries(updatedData, canEdit) {
-    const tableContainer = document.getElementById('entriesTableContainer');
 
-
-    let tableHTML = `<h2>Entries</h2>`
-    tableHTML += `<table><tr><th>番</th><th>所属</th><th>競技番号</th><th>日付</th><th>種目名</th><th>競技名</th><th>選手名</th><th>選手登録番号</th><th>馬名</th><th>馬登録番号</th><th>区分</th><th>エントリー料</th><th>備考</th>`;
-    tableHTML += `</tr>`;
-    
-    // entries.forEach(r => {
-    //     tableHTML += `<tr>
-    //         <td>${r.number}</td>
-    //         <td contenteditable="${canEdit}">${r.riderName}</td>
-    //         <td contenteditable="${canEdit}">${r.riderNameFurigana}</td>
-    //         <td contenteditable="${canEdit}">${r.riderRegNumber}</td>
-    //         <td contenteditable="${canEdit}">${r.riderSex}</td>`;
-    //     if (canEdit) {
-    //         tableHTML += `<td><button class="deleteRow"> X </button></td></tr>`;
-    //     }else {
-    //         tableHTML += `</tr>`;
-    //     }
-    //     newRowNumbers.riders = +r.number + 1;
-    // });
-
-    tableHTML += `</table>`;
-    tableHTML += `<button id="addEntryRow" class="addRowButton" data-new-row-number="${newRowNumbers.entries}" data-container-id="entriesTableContainer" data-headers="Number,teamName,scheduleNumber,scheduleDate,category,eventCode,eventName,priceCode,riderName,riderRegNumber,horseName,horseRegNumber,comment">追加</button>`;
-    tableContainer.innerHTML = tableHTML;
-    tableContainer.style.display = 'block';
-    Array.from(document.getElementsByClassName('deleteRow')).forEach(button => {
-        button.addEventListener('click', deleteRow);
-    });
-    document.getElementById('addEntryRow').addEventListener('click', handleAddRow);
-}
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //          [追加] & [ X ] table buttons
 
@@ -493,23 +460,61 @@ document.getElementById('updateButton').addEventListener('click', function() {
         // displayRiders(riders);
 
 
+        const entriesContainer = document.getElementById('entriesContainer');
+        entriesContainer.style.display = 'block';
+        displayEntries(updatedData, true);
 
-        loadEventCSV();
-        updateSelectOptions(updatedData);
 
-        const eventForm = document.getElementById('eventForm');
-        const addEntryButton = document.getElementById('addEntryButton');
-        eventForm.style.display = 'block';
-        addEntryButton.style.display = 'block';
+
+
+        // loadEventCSV();
+        // updateSelectOptions(updatedData);
+        // const eventForm = document.getElementById('eventForm');
+        // const addEntryButton = document.getElementById('addEntryButton');
+        // eventForm.style.display = 'block';
+        // addEntryButton.style.display = 'block';
 
         
        
 
-        displayEntryForm(updatedData);
+        
     }
 });
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//          Entries 
+function displayEntries(updatedData, canEdit) {
+    const tableContainer = document.getElementById('entriesTableContainer');
 
-function displayEntryForm(updatedData) {}
+
+    let tableHTML = `<h2>Entries</h2>`
+    tableHTML += `<table><tr><th>番</th><th>所属</th><th>競技番号</th>><th>選手名</th><th>馬名</th><th>備考</th>`;
+    tableHTML += `</tr>`;
+    
+    // entries.forEach(r => {
+    //     tableHTML += `<tr>
+    //         <td>${r.number}</td>
+    //         <td contenteditable="${canEdit}">${r.riderName}</td>
+    //         <td contenteditable="${canEdit}">${r.riderNameFurigana}</td>
+    //         <td contenteditable="${canEdit}">${r.riderRegNumber}</td>
+    //         <td contenteditable="${canEdit}">${r.riderSex}</td>`;
+    //     if (canEdit) {
+    //         tableHTML += `<td><button class="deleteRow"> X </button></td></tr>`;
+    //     }else {
+    //         tableHTML += `</tr>`;
+    //     }
+    //     newRowNumbers.riders = +r.number + 1;
+    // });
+
+    tableHTML += `</table>`;
+    tableHTML += `<button id="addEntryRow" class="addRowButton" data-new-row-number="${newRowNumbers.entries}" data-container-id="entriesTableContainer" data-headers="Number,teamName,scheduleNumber,scheduleDate,category,eventCode,eventName,priceCode,riderName,riderRegNumber,horseName,horseRegNumber,comment">追加</button>`;
+    tableContainer.innerHTML = tableHTML;
+    tableContainer.style.display = 'block';
+    Array.from(document.getElementsByClassName('deleteRow')).forEach(button => {
+        button.addEventListener('click', deleteRow);
+    });
+    document.getElementById('addEntryRow').addEventListener('click', handleAddRow);
+}
+
 
 
 
