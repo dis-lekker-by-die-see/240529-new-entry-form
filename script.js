@@ -505,64 +505,176 @@ function handleAddEntryRow(event) {
     addEntryRow(headers);
 }
 /////////////////////////////////////////////////////
-function addEntryRow(headers) {  
+
+
+
+function addEntryRow(headers) {
     const tableContainer = document.getElementById('entriesTableContainer');
     const table = tableContainer.querySelector('table');
     const newRow = document.createElement('tr');
+    if (!validateAllInputs()) {
+        alert('Please fill all required fields before adding a new entry.');
+        return; // Stop the function if not all inputs are valid
+    }
     headers.forEach(header => {
         let newCell = document.createElement('td');
-        if (header === 'number') {
-            newCell.innerHTML = `${newRowNumbers.entries}`;
-        } else if (header === 'teamName') {
-            newCell.innerHTML = `<select class="teamSelect" required></select>`;
-        } else if (header === 'scheduleNumber') {
-            newCell.innerHTML = `<input type="number" class="scheduleNumber" min="1" max="999" required>
-                                <div class="category" style="display: none;"></div>`;
-        } else if (header === 'scheduleDate') {
-            newCell.innerHTML = `<span class="scheduleDate"></span>`;
-        } else if (header === 'eventCode') {
-            newCell.innerHTML = `<span class="eventCode"></span>`;
-        } else if (header === 'eventName') {
-            newCell.innerHTML = `<span class="eventName"></span>`;
-        } else if (header === 'priceCode') {
-            newCell.innerHTML = `<span class="priceCode"></span>`;
-        } else if (header === 'price') {
-            newCell.innerHTML = `<span class="price"></span>`;
-        } else if (header === 'riderName') {
-            newCell.innerHTML = `<select class="riderSelect" required></select>`;
-        } else if (header === 'riderRegNumber') {
-            newCell.innerHTML = `<span class="riderSelectRegNumber"></span>`;
-        } else if (header === 'horseName') {
-            newCell.innerHTML = `<select class="horseSelect" required></select>`;
-        } else if (header === 'horseRegNumber') {
-            newCell.innerHTML = `<span class="horseSelectRegNumber"></span>`;
-        } else if (header === 'comment') {
-            newCell.innerHTML = `<textarea class="entryComment" rows="1" cols="15" placeholder="選択：2A、OP、等"></textarea>`;
-            newCell.setAttribute('contenteditable', 'true');
-        } else {
-            newCell.innerHTML = ``;
+        let inputElement = null; // To hold any input/select element for validation purpose
+
+        switch (header) {
+            case 'number':
+                newCell.textContent = `${newRowNumbers.entries}`;
+                break;
+            case 'teamName':
+                inputElement = document.createElement('select');
+                inputElement.className = "teamSelect";
+                inputElement.required = true;
+                break;
+            case 'scheduleNumber':
+                inputElement = document.createElement('input');
+                inputElement.type = 'number';
+                inputElement.className = 'scheduleNumber';
+                inputElement.min = '1';
+                inputElement.max = '999';
+                inputElement.required = true;
+                newCell.appendChild(inputElement);
+                newCell.appendChild(document.createElement('div')).className = "category";
+                newCell.lastChild.style.display = 'none';
+                break;
+            case 'scheduleDate':
+            case 'eventCode':
+            case 'eventName':
+            case 'priceCode':
+            case 'price':
+                newCell.innerHTML = `<span class="${header}"></span>`;
+                break;
+            case 'riderName':
+                inputElement = document.createElement('select');
+                inputElement.className = 'riderSelect';
+                inputElement.required = true;
+                break;
+            case 'riderRegNumber':
+                newCell.innerHTML = `<span class="riderSelectRegNumber"></span>`;
+                break;
+            case 'horseName':
+                inputElement = document.createElement('select');
+                inputElement.className = 'horseSelect';
+                inputElement.required = true;
+                break;
+            case 'horseRegNumber':
+                newCell.innerHTML = `<span class="horseSelectRegNumber"></span>`;
+                break;
+            case 'comment':
+                inputElement = document.createElement('textarea');
+                inputElement.className = 'entryComment';
+                inputElement.rows = '1';
+                inputElement.cols = '15';
+                inputElement.placeholder = '選択：2A、OP、等';
+                break;
+            default:
+                newCell.textContent = '';
+                break;
         }
+
+        if (inputElement) {
+            newCell.appendChild(inputElement);
+        }
+
+        // Add validation event listener if inputElement exists
+        // if (inputElement && inputElement.tagName !== 'SPAN') {
+        //     inputElement.addEventListener('change', () => validateCell(inputElement));
+        // }
+
         newRow.appendChild(newCell);
     });
-    table.appendChild(newRow);
-    updateSelectOptions();
 
-    // Change the '追加' button to 'Update Table'
-    const addButton = tableContainer.querySelector('.addEntryRowButton');
-    addButton.textContent = '更新';
-    newRowNumbers.entries += 1;
-    addButton.removeEventListener('click', handleAddEntryRow);
-    addButton.addEventListener('click', () => {
-        if (validateRow(newRow)) {
-            if (containerId != 'clubTableContainer') {
-                addButton.textContent = '追加';
-                addButton.addEventListener('click', handleAddEntryRow);
-            }
+    table.appendChild(newRow);
+    updateSelectOptions(); // Assuming this function populates select options
+}
+
+// Validation function to check the input and apply styles if necessary
+// function validateCell(input) {
+//     if (!input.value && input.required) {
+//         input.style.borderColor = 'red'; // Apply red border if invalid
+//     } else {
+//         input.style.borderColor = ''; // Remove border if valid
+//     }
+// }
+function validateAllInputs() {
+    let isValid = true;
+    const inputs = document.querySelectorAll('#entriesTableContainer input, #entriesTableContainer select, #entriesTableContainer textarea');
+    
+    inputs.forEach(input => {
+        if (!input.value && input.required) {
+            input.style.borderColor = 'red'; // Apply red border if invalid
+            isValid = false; // Set isValid to false if any input is invalid
         } else {
-            alert('Please fill in all cells.');
+            input.style.borderColor = ''; // Remove border if valid
         }
     });
+
+    return isValid;
 }
+
+
+
+
+// ///////////////////////////////
+// function addEntryRow(headers) {  
+//     const tableContainer = document.getElementById('entriesTableContainer');
+//     const table = tableContainer.querySelector('table');
+//     const newRow = document.createElement('tr');
+//     headers.forEach(header => {
+//         let newCell = document.createElement('td');
+//         if (header === 'number') {
+//             newCell.innerHTML = `${newRowNumbers.entries}`;
+//         } else if (header === 'teamName') {
+//             newCell.innerHTML = `<select class="teamSelect" required></select>`;
+//         } else if (header === 'scheduleNumber') {
+//             newCell.innerHTML = `<input type="number" class="scheduleNumber" min="1" max="999" required>
+//                                 <div class="category" style="display: none;"></div>`;
+//         } else if (header === 'scheduleDate') {
+//             newCell.innerHTML = `<span class="scheduleDate"></span>`;
+//         } else if (header === 'eventCode') {
+//             newCell.innerHTML = `<span class="eventCode"></span>`;
+//         } else if (header === 'eventName') {
+//             newCell.innerHTML = `<span class="eventName"></span>`;
+//         } else if (header === 'priceCode') {
+//             newCell.innerHTML = `<span class="priceCode"></span>`;
+//         } else if (header === 'price') {
+//             newCell.innerHTML = `<span class="price"></span>`;
+//         } else if (header === 'riderName') {
+//             newCell.innerHTML = `<select class="riderSelect" required></select>`;
+//         } else if (header === 'riderRegNumber') {
+//             newCell.innerHTML = `<span class="riderSelectRegNumber"></span>`;
+//         } else if (header === 'horseName') {
+//             newCell.innerHTML = `<select class="horseSelect" required></select>`;
+//         } else if (header === 'horseRegNumber') {
+//             newCell.innerHTML = `<span class="horseSelectRegNumber"></span>`;
+//         } else if (header === 'comment') {
+//             newCell.innerHTML = `<textarea class="entryComment" rows="1" cols="15" placeholder="選択：2A、OP、等"></textarea>`;
+//             //newCell.setAttribute('contenteditable', 'true');
+//         } else {
+//             newCell.innerHTML = ``;
+//         }
+//         newRow.appendChild(newCell);
+//     });
+//     table.appendChild(newRow);
+//     updateSelectOptions();
+
+//     // Change the '追加' button to 'Update Table'
+//     const addButton = tableContainer.querySelector('.addEntryRowButton');
+//     addButton.textContent = '更新';
+//     newRowNumbers.entries += 1;
+//     addButton.removeEventListener('click', handleAddEntryRow);
+//     addButton.addEventListener('click', () => {
+//         if (validateRow(newRow)) {
+//             addButton.textContent = '追加';
+//             addButton.addEventListener('click', handleAddEntryRow);
+//         } else {
+//             alert('Please fill in all cells.');
+//         }
+//     });
+// }
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -797,16 +909,16 @@ function updateSelectOptions() {
     });
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////
-function validateLastInputs(inputs, errorMessage) {
-    let isValid = true;
-    inputs.forEach(input => {
-        if (!input.value) {
-            isValid = false;
-            errorMessage.textContent = "Please fill out all required fields.";
-        }
-    });
-    return isValid;
-}
+// function validateLastInputs(inputs, errorMessage) {
+//     let isValid = true;
+//     inputs.forEach(input => {
+//         if (!input.value) {
+//             isValid = false;
+//             errorMessage.textContent = "Please fill out all required fields.";
+//         }
+//     });
+//     return isValid;
+// }
 
 
 

@@ -779,3 +779,50 @@ addEntryRow @ script.js:565
 handleAddEntryRow @ script.js:510
 script.js:746 Uncaught TypeError: Cannot set properties of null (setting 'textContent')
     at HTMLSelectElement.<anonymous> (script.js:746:72)
+
+
+
+function addEntryRow(headers) {  
+    const tableContainer = document.getElementById('entriesTableContainer');
+    const table = tableContainer.querySelector('table');
+    const newRow = document.createElement('tr');
+    headers.forEach(header => {
+        let newCell = document.createElement('td');
+        if (header === 'number') {
+            newCell.innerHTML = `${newRowNumbers.entries}`;
+        } else if (header === 'teamName') {
+            newCell.innerHTML = `<select class="teamSelect" required></select>`;
+        } else if (header === 'scheduleNumber') {
+            newCell.innerHTML = `<input type="number" class="scheduleNumber" min="1" max="999" required>
+                                <div class="category" style="display: none;"></div>`;
+        } else if (header === 'scheduleDate') {
+            newCell.innerHTML = `<span class="scheduleDate"></span>`;
+        } else if (header === 'eventCode') {
+            newCell.innerHTML = `<span class="eventCode"></span>`;
+        } else if (header === 'eventName') {
+            newCell.innerHTML = `<span class="eventName"></span>`;
+        } else if (header === 'priceCode') {
+            newCell.innerHTML = `<span class="priceCode"></span>`;
+        } else if (header === 'price') {
+            newCell.innerHTML = `<span class="price"></span>`;
+        } else if (header === 'riderName') {
+            newCell.innerHTML = `<select class="riderSelect" required></select>`;
+        } else if (header === 'riderRegNumber') {
+            newCell.innerHTML = `<span class="riderSelectRegNumber"></span>`;
+        } else if (header === 'horseName') {
+            newCell.innerHTML = `<select class="horseSelect" required></select>`;
+        } else if (header === 'horseRegNumber') {
+            newCell.innerHTML = `<span class="horseSelectRegNumber"></span>`;
+        } else if (header === 'comment') {
+            newCell.innerHTML = `<textarea class="entryComment" rows="1" cols="15" placeholder="選択：2A、OP、等"></textarea>`;
+            //newCell.setAttribute('contenteditable', 'true');
+        } else {
+            newCell.innerHTML = ``;
+        }
+        newRow.appendChild(newCell);
+    });
+    table.appendChild(newRow);
+    updateSelectOptions();
+}
+Created a function that checks that each cell has a valid value. entryComment can be blank. If all the values are not 
+filled, if possible, place a red border around the cell that is still missing input.
