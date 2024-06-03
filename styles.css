@@ -42,7 +42,7 @@ select, button {
     width: auto;
 }
 
-.mainContainer {
+.mainContainer, form {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -178,51 +178,96 @@ tr:hover {
     */
 }
 /*///////////////////////////////////////////////////////////////////////////////////////////*/
-/*form {
-    display: flex;
-    width: 100%;
-    min-width: 250px;
-}*/
+
+.entryNumber {
+    font-size: 1.1em;
+    margin-right: 20px;
+}
+
+.entryNumberLine {
+    margin-bottom: 10px;
+}
 
 label {
     display: block;
-    margin-top: 10px;
-    font-weight: 500;
+    font-size: 0.8em;
     color: #444;
 }
 
-
-
-.entry .entry-fields {
+.entry .entryNumberLine, .entry .entry-fields {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     width: 100%;
 }
-.entry-fields > input {
-    font-size: 1em;
-    font-weight: 500;
-    margin-top: 5px;
+
+.entry-fields > div > select {
+    display: block;
+    width: 100%; 
+}
+
+.scheduleNumber {
+    font-size: 0.9em;
     padding: 8px;
     border: 1px solid #ddd;
     border-radius: 8px;
     box-sizing: border-box;
     transition: all 0.3s ease;
-    width: 100%; 
+    width: 100px; 
 }
-.entry-fields > div {
-    flex: 1 1 calc(25% - 20px);
+
+.eventInfoDisplay {
+    flex: 1;
+    position: relative;
+    top: 0px; 
+    font-size: 0.9em;
+    margin-left: 10px;
+}
+
+.entryComment {
+    width: 100%;
+    padding: 7px;
 }
 
 .entry {
-    margin-bottom: 20px;
-    padding: 20px;
+    margin-bottom: 10px;
+    padding: 10px;
+    padding-right: 25px;
     /*background-color: #f9f9f9;
     */
     background-color: rgb(251, 234, 237);
     border: 1px solid #e1e1e1;
     border-radius: 12px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    padding-bottom: 20px;
-    margin-bottom: 25px;
+    overflow: hidden;
+}
+
+.entry-fields > div {
+    flex: 1 1 calc(20% - 15px);
+}
+
+@media (max-width: 1200px) {
+    .entry-fields > div {
+        flex: 1 1 calc(20% - 15px);
+    }
+}
+@media (max-width: 900px) {
+    .entry-fields > div {
+        flex: 1 1 calc(25% - 15px);
+    }
+}
+@media (max-width: 700px) {
+    .entry-fields > div {
+        flex: 1 1 calc(33.333% - 15px);
+    }
+}
+@media (max-width: 500px) {
+    .entry-fields > div {
+        flex: 1 1 calc(50% - 15px);
+    }
+}
+@media (max-width: 300px) {
+    .entry-fields > div {
+        flex: 1 1 calc(100% - 15px);
+    }
 }

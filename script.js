@@ -8,6 +8,7 @@
 let clubSelected = false;
 let wasNewClubOptionSelected = false;
 let newRowNumbers = { club: 0, teams: 0, horses: 0, riders: 0, entries: 0 };
+let events = {};
 //*///////////////////////////////////////////////////////////////////////////////////////////////////////
 document.addEventListener("DOMContentLoaded", function() {
     fetch('json_files_list.json')
@@ -524,7 +525,7 @@ async function loadEventCSV() {
 
         const text = await response.text();
         const lines = text.trim().split('\n');
-        const events = {}; // This assumes 'events' is not already declared elsewhere
+        //const events = {}; // This assumes 'events' is not already declared elsewhere
 
         for (const line of lines) {
             const [scheduleNumber, scheduleDate, eventNumber, category, eventCode,
@@ -554,77 +555,82 @@ async function loadEventCSV() {
 
 
 
-// function displayEntryForm(updatedData) {
-//     document.getElementById('addEntryButton').addEventListener('click', function() {
-//         const eventForm = document.getElementById('eventForm');
-//         const entryContainer = eventForm.querySelector('.entry'); //-container
-//         const lastEntry = entryContainer ? entryContainer.lastElementChild : null;
-//         const errorMessage = document.getElementById('error-message-entry');
+function displayEntryForm(updatedData) {
+    document.getElementById('addEntryButton').addEventListener('click', function() {
+        //const entryContainer = document.getElementById('eventForm');
+        const eventForm = document.getElementById('eventForm');
+        const entryContainer = eventForm.querySelector('.entry-container'); 
+        const lastEntry = entryContainer ? entryContainer.lastElementChild : null;
+        const errorMessage = document.getElementById('error-message-entry');
 
-//         if (lastEntry) {
-//             const inputs = lastEntry.querySelectorAll('input[required], select[required]');
-//             const isValid = validateLastInputs(inputs, errorMessage);
-//             if (!isValid) {
-//                 return;
-//             }
-//         }
-//         const entryDiv = document.createElement('div');
-//         entryDiv.className = 'entry';
-//         const entryNumber = document.querySelectorAll('.entry').length + 1;
-//         let charDisplayId = 'entryNumberCharDisplay' + (entryNumber - 1);
-//         const entryNumberCharDisplay = document.getElementById(charDisplayId);
-//         if (entryNumberCharDisplay) {
-//             entryNumberCharDisplay.textContent = 'C'.repeat(entryNumber - 1);
-//         }
-//         charDisplayId = 'entryNumberCharDisplay' + (entryNumber);
-//         entryDiv.innerHTML = `
-//             <div class="entryNumberLine">
-//                 <div class="entryNumber">${entryNumber}</div>
-//                 <div id="${charDisplayId}" class="entryNumberChar">_</div>
-//             </div>
-//             <div class="entry-fields">
-//                 <div>
-//                     <label for="teamSelect">所属</label>
-//                     <select class="teamSelect" required></select>
-//                 </div>
-//                 <div>
-//                     <label for="scheduleNumber">競技番号</label>
-//                     <input type="number" class="scheduleNumber" min="1" max="999" required>
-//                     <span class="eventInfoDisplay"></span>
-//                     <div class="scheduleDate" style="display: none;"></div>
-//                     <div class="category" style="display: none;"></div>
-//                     <div class="eventCode" style="display: none;"></div>
-//                     <div class="eventName" style="display: none;"></div>
-//                     <div class="priceCode" style="display: none;"></div>
-//                     <div class="price" style="display: none;"></div>
-//                 </div>
-//                 <div>
-//                     <label for="riderSelect">選手名</label>
-//                     <select class="riderSelect" required></select>
-//                     <div class="riderSelectRegNumber" style="display: none;"></div>
-//                 </div>
-//                 <div>
-//                     <label for="horseSelect">馬名</label>
-//                     <select class="horseSelect" required></select>
-//                     <div class="horseSelectRegNumber" style="display: none;"></div>
-//                 </div>
-//                 <div>
-//                     <label for="entryComment">備考</label>
-//                     <textarea class="entryComment" rows="2" placeholder="選択馬場種目名：2A、OP、等"></textarea>
-//                 </div>
-//             </div>
-//         `;
-//         if (!entryContainer) {
-//             const newEntryContainer = document.createElement('div');
-//             newEntryContainer.className = 'entry'; //-container
-//             eventForm.appendChild(newEntryContainer);
-//             newEntryContainer.appendChild(entryDiv);
-//         } else {
-//             entryContainer.appendChild(entryDiv);
-//         }
-//         updateSelectOptions(updatedData);
-//     });
-// }
+        if (lastEntry) {
+            const inputs = lastEntry.querySelectorAll('input[required], select[required]');
+            const isValid = validateLastInputs(inputs, errorMessage);
+            if (!isValid) {
+                return;
+            }
+        }
+        const entryDiv = document.createElement('div');
+        entryDiv.className = 'entry';
+        const entryNumber = document.querySelectorAll('.entry').length + 1;
+        // let charDisplayId = 'entryNumberCharDisplay' + (entryNumber - 1);
+        // const entryNumberCharDisplay = document.getElementById(charDisplayId);
+        // if (entryNumberCharDisplay) {
+        //     entryNumberCharDisplay.textContent = 'C'.repeat(entryNumber - 1);
+        // }
+        // charDisplayId = 'entryNumberCharDisplay' + (entryNumber);
+        entryDiv.innerHTML = `
+            
+            <div class="entryNumberLine">
+                <div class="entryNumber">${entryNumber}</div>
+            </div>
+
+            <div class="entry-fields">
+                <div>
+                    <label for="scheduleNumber">競技番号</label>
+                    <input type="number" class="scheduleNumber" min="1" max="999" required>
+                    <span class="eventInfoDisplay"></span>
+                    <div class="scheduleDate" style="display: none;"></div>
+                    <div class="category" style="display: none;"></div>
+                    <div class="eventCode" style="display: none;"></div>
+                    <div class="eventName" style="display: none;"></div>
+                    <div class="priceCode" style="display: none;"></div>
+                    <div class="price" style="display: none;"></div>
+                </div>
+                <div>
+                    <label for="teamSelect">所属</label>
+                    <select class="teamSelect" required></select>
+                </div>
+                <div>
+                    <label for="riderSelect">選手名</label>
+                    <select class="riderSelect" required></select>
+                    <div class="riderSelectRegNumber" style="display: none;"></div>
+                </div>
+                <div>
+                    <label for="horseSelect">馬名</label>
+                    <select class="horseSelect" required></select>
+                    <div class="horseSelectRegNumber" style="display: none;"></div>
+                </div>
+                <div>
+                    <label for="entryComment">備考</label>
+                    <textarea class="entryComment" rows="1" placeholder="選択馬場種目名：2A、OP、等"></textarea>
+                </div>
+            </div>
+        `;
+        // if (!entryContainer) {
+        //     const newEntryContainer = document.createElement('div');
+        //     newEntryContainer.className = 'entry'; //-container
+        //     eventForm.appendChild(newEntryContainer);
+        //     newEntryContainer.appendChild(entryDiv);
+        // } else {
+        //     entryContainer.appendChild(entryDiv);
+        // }
+
+        entryContainer.appendChild(entryDiv);
+        updateSelectOptions(updatedData);
+    });
+}
+
 function updateSelectOptions(updatedData) {
     const teamSelects = document.querySelectorAll('.teamSelect');
     const riderSelects = document.querySelectorAll('.riderSelect');
@@ -659,18 +665,47 @@ function updateSelectOptions(updatedData) {
             select.appendChild(option);
         });
     });
+
+    //////////////////////////////////////////////////
+    const scheduleNumbers = document.querySelectorAll('.scheduleNumber');
+    scheduleNumbers.forEach(input => {
+        input.addEventListener('input', function() {
+            const parentElement = this.closest('.entryNumberLine'); // Find the closest parent container
+            //const parentElement = this.closest('.entry-fields'); // Find the closest parent container
+            const scheduleNumber = this.value.trim();
+            
+            if (events[scheduleNumber]) {
+                const eventData = events[scheduleNumber];
+                parentElement.querySelector('.eventInfoDisplay').textContent = `${eventData.scheduleDate} : ${eventData.eventCode} : ${eventData.eventName}`; //(${eventData.priceCode})
+                parentElement.querySelector('.eventName').value = eventData.eventName;
+                parentElement.querySelector('.scheduleDate').value = eventData.scheduleDate;
+                parentElement.querySelector('.category').value = eventData.category;
+                parentElement.querySelector('.eventCode').value = eventData.eventCode;
+                parentElement.querySelector('.priceCode').value = eventData.priceCode;
+                parentElement.querySelector('.price').value = eventData.price;
+            } else {
+                parentElement.querySelector('.eventInfoDisplay').textContent = 'Event not found';
+                parentElement.querySelector('.eventName').value = '';
+                parentElement.querySelector('.scheduleDate').value = '';
+                parentElement.querySelector('.category').value = '';
+                parentElement.querySelector('.eventCode').value = '';
+                parentElement.querySelector('.priceCode').value = '';
+                parentElement.querySelector('.price').value = '';
+            }
+        });
+    });
 }
 
-// function validateLastInputs(inputs, errorMessage) {
-//     let isValid = true;
-//     inputs.forEach(input => {
-//         if (!input.value) {
-//             isValid = false;
-//             errorMessage.textContent = "Please fill out all required fields.";
-//         }
-//     });
-//     return isValid;
-// }
+function validateLastInputs(inputs, errorMessage) {
+    let isValid = true;
+    inputs.forEach(input => {
+        if (!input.value) {
+            isValid = false;
+            errorMessage.textContent = "Please fill out all required fields.";
+        }
+    });
+    return isValid;
+}
 
 
 
