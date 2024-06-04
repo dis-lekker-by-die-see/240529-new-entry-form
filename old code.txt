@@ -829,88 +829,276 @@ filled, if possible, place a red border around the cell that is still missing in
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-{
-    "club": [ 
-      {
-        "clubName": "大山乗馬センター",
-        "registrationOfficer": "北垣",
-        "mobile": "90",
-        "phone": "859",
-        "email": "mail@",
-        "fax": "859",
-        "address": "大山"
-      }
-    ],
-    "teams": [
-      {
-        "number": "1",
-        "teamName": "大山乗馬センター",
-        "undefined": "X"
-      },
-      {
-        "number": "2",
-        "teamName": "鳥取大学馬術部",
-        "undefined": "X"
-      }
-    ],
-    "horses": [
-      {
-        "number": "1",
-        "horseName": "トーアレラ",
-        "horseNameFurigana": "トーアレラ",
-        "horseRegNumber": "60567",
-        "horseSex": "セン",
-        "horseAge": "12",
-        "horseColor": "芦毛",
-        "horseBreed": "サラブレッド",
-        "horseOrigin": "北海道",
-        "horseOwner": "北垣",
-        "undefined": "X"
-      },
-      {
-        "number": "3",
-        "horseName": "カジノプレイヤー",
-        "horseNameFurigana": "カジノプレイヤー",
-        "horseRegNumber": "58786",
-        "horseSex": "セン",
-        "horseAge": "?",
-        "horseColor": "鹿毛",
-        "horseBreed": "?",
-        "horseOrigin": "?",
-        "horseOwner": "?",
-        "undefined": "X"
-      }
-    ],
-    "riders": [
-      {
-        "number": "1",
-        "riderName": "北垣",
-        "riderNameFurigana": "キタガキ",
-        "riderRegNumber": "3679",
-        "riderSex": "男子",
-        "undefined": "X"
-      },
-      {
-        "number": "2",
-        "riderName": "加藤 友貴",
-        "riderNameFurigana": "カトウ ユウキ",
-        "riderRegNumber": "32871",
-        "riderSex": "男子",
-        "undefined": "X"
-      },
-      {
-        "number": "4",
-        "riderName": "定松 優芽",
-        "riderNameFurigana": "サダマツ ユメ",
-        "riderRegNumber": "0",
-        "riderSex": "男子",
-        "undefined": "X"
-      }
-    ]
+
+function addEntryRow(headers) {
+    const tableContainer = document.getElementById('entriesTableContainer');
+    const table = tableContainer.querySelector('table');
+    const newRow = document.createElement('tr');
+    if (!validateAllInputs()) {
+        alert('Please fill all required fields before adding a new entry.');
+        return; // Stop the function if not all inputs are valid
+    }
+    newRowNumbers.entries += 1;
+    headers.forEach(header => {
+        let newCell = document.createElement('td');
+        let inputElement = null; // To hold any input/select element for validation purpose
+        switch (header) {
+            case 'number':
+                newCell.textContent = `${newRowNumbers.entries}`;
+                break;
+            case 'teamName':
+                inputElement = document.createElement('select');
+                inputElement.className = "teamSelect";
+                inputElement.required = true;
+                break;
+            case 'scheduleNumber':
+                inputElement = document.createElement('input');
+                inputElement.type = 'number';
+                inputElement.className = 'scheduleNumber';
+                inputElement.min = '1';
+                inputElement.max = '999';
+                inputElement.required = true;
+                newCell.appendChild(inputElement);
+                newCell.appendChild(document.createElement('div')).className = "category";
+                newCell.lastChild.style.display = 'none';
+                break;
+            case 'scheduleDate':
+            case 'eventCode':
+            case 'eventName':
+            case 'priceCode':
+            case 'price':
+                newCell.innerHTML = `<span class="${header}"></span>`;
+                break;
+            case 'riderName':
+                inputElement = document.createElement('select');
+                inputElement.className = 'riderSelect';
+                inputElement.required = true;
+                break;
+            case 'riderRegNumber':
+                newCell.innerHTML = `<span class="riderSelectRegNumber"></span>`;
+                break;
+            case 'horseName':
+                inputElement = document.createElement('select');
+                inputElement.className = 'horseSelect';
+                inputElement.required = true;
+                break;
+            case 'horseRegNumber':
+                newCell.innerHTML = `<span class="horseSelectRegNumber"></span>`;
+                break;
+            case 'comment':
+                inputElement = document.createElement('textarea');
+                inputElement.className = 'entryComment';
+                inputElement.rows = '1';
+                inputElement.cols = '15';
+                inputElement.placeholder = '選択：2A、OP、等';
+                break;
+            default:
+                newCell.textContent = '';
+                break;
+        }
+        if (inputElement) {
+            newCell.appendChild(inputElement);
+        }
+        newRow.appendChild(newCell);
+    });
+    table.appendChild(newRow);
+
+
+The function above creates a table that a user must fill in. The user can add many rows.
+Create a function that captures all the table data and stores it in a format similar to the below json format.
+If either "teamName", "scheduleNumber", "riderName", or "horseName" is blank or has no value, do not record it.
+
+{"entries": [
+    {
+      "number": "1",
+      "teamName":"大山乗馬センター",
+      "scheduleNumber": "1",
+      "scheduleDate": "2024-05-16",
+      "category": "2",
+      "eventCode": "FS120",
+      "eventName": "フレンドシップ120",
+      "riderName": "吉田 桃",
+      "riderRegNumber": "32536",
+      "horseName":"リグヴェーダ",
+      "horseRegNumber":"58280",
+      "priceCode": "フレンドシップ",
+      "price": "7000",
+      "comment": ""
+    },
+    {
+      "number": "2",
+      "teamName":"大山乗馬センター",
+      "scheduleNumber": "1",
+      "scheduleDate": "2024-05-16",
+      "category": "2",
+      "eventCode": "FS120",
+      "eventName": "フレンドシップ120",
+      "riderName": "和食 文子",
+      "riderRegNumber": "0",
+      "horseName":"カジノプレイヤー",
+      "horseRegNumber":"58786",
+      "priceCode": "フレンドシップ",
+      "price": "7000",
+      "comment": ""
+    }
+  ]
 }
 
-Above is the data in global variable 'updatedData' below (except each key is not in ""). 
+
+{"entries":[{"番":"1","所属":"大山乗馬センター","競技番号":"1","日付":"2024-05-16","種目名":"FS120","競技名":"フレンドシップ120","選手名":"北垣","選手登録番号":"3679","馬名":"トーアレラ","馬登録番号":"60567","区分":"フレンドシップ","エントリー料":"7000","備考":""},{"番":"2","所属":"大山乗馬センター","競技番号":"","日付":"","種目名":"","競技名":"","選手名":"","選手登録番号":"","馬名":"","馬登録番号":"","区分":"","エントリー料":"","備考":""}]}
+
+
+{"entries": [
+    {
+      "number": "1",
+      "teamName":"大山乗馬センター",
+      "scheduleNumber": "1",
+      "scheduleDate": "2024-05-16",
+      "category": "2",
+      "eventCode": "FS120",
+      "eventName": "フレンドシップ120",
+      "riderName": "吉田 桃",
+      "riderRegNumber": "32536",
+      "horseName":"リグヴェーダ",
+      "horseRegNumber":"58280",
+      "priceCode": "フレンドシップ",
+      "price": "7000",
+      "comment": ""
+    },
+    {
+      "number": "2",
+      "teamName":"大山乗馬センター",
+      "scheduleNumber": "1",
+      "scheduleDate": "2024-05-16",
+      "category": "2",
+      "eventCode": "FS120",
+      "eventName": "フレンドシップ120",
+      "riderName": "和食 文子",
+      "riderRegNumber": "0",
+      "horseName":"カジノプレイヤー",
+      "horseRegNumber":"58786",
+      "priceCode": "フレンドシップ",
+      "price": "7000",
+      "comment": ""
+    }
+  ]
+}
 
 
 
+what part of all data in a row must be recorded don't you understand?
 
+Below is the function that creates the table. Use it for reference.
+
+function addEntryRow(headers) {
+    const tableContainer = document.getElementById('entriesTableContainer');
+    const table = tableContainer.querySelector('table');
+    const newRow = document.createElement('tr');
+    if (!validateAllInputs()) {
+        alert('Please fill all required fields before adding a new entry.');
+        return; // Stop the function if not all inputs are valid
+    }
+    newRowNumbers.entries += 1;
+    headers.forEach(header => {
+        let newCell = document.createElement('td');
+        let inputElement = null; // To hold any input/select element for validation purpose
+        switch (header) {
+            case 'number':
+                newCell.textContent = `${newRowNumbers.entries}`;
+                break;
+            case 'teamName':
+                inputElement = document.createElement('select');
+                inputElement.className = "teamSelect";
+                inputElement.required = true;
+                break;
+            case 'scheduleNumber':
+                inputElement = document.createElement('input');
+                inputElement.type = 'number';
+                inputElement.className = 'scheduleNumber';
+                inputElement.min = '1';
+                inputElement.max = '999';
+                inputElement.required = true;
+                newCell.appendChild(inputElement);
+                newCell.appendChild(document.createElement('div')).className = "category";
+                newCell.lastChild.style.display = 'none';
+                break;
+            case 'scheduleDate':
+            case 'eventCode':
+            case 'eventName':
+            case 'priceCode':
+            case 'price':
+                newCell.innerHTML = `<span class="${header}"></span>`;
+                break;
+            case 'riderName':
+                inputElement = document.createElement('select');
+                inputElement.className = 'riderSelect';
+                inputElement.required = true;
+                break;
+            case 'riderRegNumber':
+                newCell.innerHTML = `<span class="riderSelectRegNumber"></span>`;
+                break;
+            case 'horseName':
+                inputElement = document.createElement('select');
+                inputElement.className = 'horseSelect';
+                inputElement.required = true;
+                break;
+            case 'horseRegNumber':
+                newCell.innerHTML = `<span class="horseSelectRegNumber"></span>`;
+                break;
+            case 'comment':
+                inputElement = document.createElement('textarea');
+                inputElement.className = 'entryComment';
+                inputElement.rows = '1';
+                inputElement.cols = '15';
+                inputElement.placeholder = '選択：2A、OP、等';
+                break;
+            default:
+                newCell.textContent = '';
+                break;
+        }
+        if (inputElement) {
+            newCell.appendChild(inputElement);
+        }
+        newRow.appendChild(newCell);
+    });
+    table.appendChild(newRow);
+
+Output must look like this:
+{"entries": [
+    {
+      "number": "1",
+      "teamName":"大山乗馬センター",
+      "scheduleNumber": "1",
+      "scheduleDate": "2024-05-16",
+      "category": "2",
+      "eventCode": "FS120",
+      "eventName": "フレンドシップ120",
+      "riderName": "吉田 桃",
+      "riderRegNumber": "32536",
+      "horseName":"リグヴェーダ",
+      "horseRegNumber":"58280",
+      "priceCode": "フレンドシップ",
+      "price": "7000",
+      "comment": ""
+    },
+    {
+      "number": "2",
+      "teamName":"大山乗馬センター",
+      "scheduleNumber": "1",
+      "scheduleDate": "2024-05-16",
+      "category": "2",
+      "eventCode": "FS120",
+      "eventName": "フレンドシップ120",
+      "riderName": "和食 文子",
+      "riderRegNumber": "0",
+      "horseName":"カジノプレイヤー",
+      "horseRegNumber":"58786",
+      "priceCode": "フレンドシップ",
+      "price": "7000",
+      "comment": ""
+    }
+  ]
+}
+
+The crucial elements are: teamName, scheduleNumber, riderName, horseName. If ANY one of them is blank, the 
+entire row must be ignored. If all 4 contain data, the entire row (all inputs, selects, textareas, spans, divs) must be recorded.

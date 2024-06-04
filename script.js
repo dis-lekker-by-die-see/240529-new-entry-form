@@ -4,6 +4,7 @@ let wasNewClubOptionSelected = false;
 let updatedData = {};
 let newRowNumbers = { club: 0, teams: 0, horses: 0, riders: 0, entries: 0 };
 let events = {};
+const price馬 = 12000;
 //*///////////////////////////////////////////////////////////////////////////////////////////////////////
 document.addEventListener("DOMContentLoaded", function() {
     fetch('json_files_list.json')
@@ -623,7 +624,7 @@ function updateSelectOptions() {
                 const eventData = events[scheduleNumber];
                 parentElement.querySelector('.eventName').textContent = eventData.eventName;
                 parentElement.querySelector('.scheduleDate').textContent = eventData.scheduleDate;
-                parentElement.querySelector('.category').value = eventData.category;
+                parentElement.querySelector('.category').textContent = eventData.category;
                 parentElement.querySelector('.eventCode').textContent = eventData.eventCode;
                 parentElement.querySelector('.priceCode').textContent = eventData.priceCode;
                 parentElement.querySelector('.price').textContent = eventData.price.toString();
@@ -710,94 +711,129 @@ function updateSelectOptions() {
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //          [Create File Button] at bottom of Entries 
+
 document.getElementById('updateDataWithEntriesButton').addEventListener('click', function() {
+    //const entriesTableData = extractEntriesTableData();
+    updatedData['entries'] = extractEntriesTableData();
+    updatedData['fees'] = calculateFees();
+    console.log('Updated Data With Entries:', updatedData);
+
     
-
-    //get updatedData
-    //append Entries
-    //create json file for download
-
-
-    // const tableContainers = ['entriesTableContainer'];
-    // let isEmptyTable = false;
-    // tableContainers.forEach(containerId => {
-    //     const tableName = containerId.replace(/TableContainer/i, '');  // 'i' makes it case-insensitive
-    //     if (tableName == 'club') {
-    //         headers = [
-    //             "clubName",
-    //             "registrationOfficer",
-    //             "mobile",
-    //             "phone",
-    //             "email",
-    //             "fax",
-    //             "address"
-    //         ]
-    //     } else if (tableName == 'teams') {
-    //         headers = [
-    //             "number",
-    //             "teamName"
-    //         ]
-    //     } else if (tableName == 'horses') {
-    //         headers = [
-    //             "number",
-    //             "horseName",
-    //             "horseNameFurigana",
-    //             "horseRegNumber",
-    //             "horseSex",
-    //             "horseAge",
-    //             "horseColor",
-    //             "horseBreed",
-    //             "horseOrigin",
-    //             "horseOwner"
-    //         ]
-    //     } else if (tableName == 'riders') {
-    //         headers = [
-    //             "number",
-    //             "riderName",
-    //             "riderNameFurigana",
-    //             "riderRegNumber",
-    //             "riderSex"
-    //         ]
-    //     }
-        const table = document.getElementById('.entriesTableContainer').querySelector('table');
-        let rows = [];
-        
-        //rows = Array.from(table.rows).slice(1); // Skip the header row
-        
-        let cells = []; 
-        const data = rows.map(row => {
-            cells = Array.from(row.cells);  
-            return cells.reduce((obj, cell, index) => {
-                const select = cell.querySelector('select');
-                if (select) {
-                    obj[headers[index]] = select.value;
-                } else {
-                    obj[headers[index]] = cell.textContent.trim();
-                }
-                return obj;
-            }, {});
-        }).filter(row => !Object.values(row).some(value => value === ''));
-        if (data.length === 0) {
-            isEmptyTable = true;
-        } else {
-            updatedData[tableName] = data;
-        }
-    //});
-    if (isEmptyTable) {
-        const userChoice = confirm("One or more tables have no valid data rows. Click 'Cancel' to go back and edit, or 'OK' to reload the page.");
-        if (userChoice) {
-            window.location.reload(); 
-        } else {
-            return;
-        }
-    } else {
-        console.log('Updated Data:', updatedData);
-        clubInfoContainer.style.display = 'none';        
-        const entriesContainer = document.getElementById('entriesContainer');
-        entriesContainer.style.display = 'block';
-        displayEntries(true);
-        loadEventCSV();
-    }
+    //console.log(JSON.stringify({ entries: tableData })); // Output the collected data
 });
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+function extractEntriesTableData() {
+    const table = document.getElementById('entriesTableContainer').querySelector('table');
+    const rows = table.querySelectorAll('tr');
+    const entries = [];
+    const headers = [
+        "number",
+        "teamName",
+        "scheduleNumber",
+        "scheduleDate",
+        "eventCode",
+        "eventName",
+        "riderName",
+        "riderRegNumber",
+        "horseName",
+        "horseRegNumber",
+        "priceCode",
+        "price",
+        "comment",
+        "category"
+    ]
+    Array.from(rows).slice(1).forEach(row => {
+        const cells = row.querySelectorAll('td');
+        const entry = {};
+        let isRowValid = true;
+        cells.forEach((cell, index) => {
+            const header = headers[index];
+            let value = '';
+            const inputElement = cell.querySelector('input, select, textarea');
+            const textElement = cell.querySelector('span, div');
+            if (inputElement) {
+                value = inputElement.value;
+            } else if (textElement) {
+                value = textElement.textContent;
+            } else {
+                value = cell.textContent; // Fallback to direct cell text content
+            }
+            value = value.trim();
+            entry[header] = value;
+            if (['teamName', 'scheduleNumber', 'riderName', 'horseName'].includes(header) && !value) {
+                isRowValid = false; // Invalidate the row if any crucial field is empty
+            }
+        });
+        entry['category'] = row.querySelector('.category').textContent;
+        if (isRowValid) {
+            entries.push(entry);
+        }
+    });
+    return entries;
+}
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+function calculateFees() {
+    let fees = [
+        { 
+            item: '馬',
+            count: 0,
+            amount: 0
+        },
+        {
+            item: '公認',
+            count: 0,
+            amount: 0
+        },
+        { 
+            item: '一般',
+            count: 0,
+            amount: 0
+        },
+        {
+            item: 'フレンドシップ',
+            count: 0,
+            amount: 0
+        },
+        { 
+            item: 'ジムカーナ',
+            count: 0,
+            amount: 0
+        },
+        {
+            item: 'クロス',
+            count: 0,
+            amount: 0
+        }
+    ];
+    const horseCounts = {};
+    updatedData.entries.forEach(entry => {
+        horseCounts[entry.horseName] = (horseCounts[entry.horseName] || 0) + 1;
+
+        if (entry.priceCode == "公認") {
+            fees[1].count += 1;
+            fees[1].amount += parseFloat(entry.price);
+            
+        }
+        if (entry.priceCode == "一般") {
+            fees[2].count += 1;
+            fees[2].amount = parseFloat(entry.price);
+        }
+        if (entry.priceCode == "フレンドシップ") {
+            fees[3].count += 1;
+            fees[3].amount = parseFloat(entry.price);
+        }
+        if (entry.priceCode == "ジムカーナ") {
+            fees[4].count += 1;
+            fees[4].amount = parseFloat(entry.price);
+        }
+        if (entry.priceCode == "クロス") {
+            fees[5].count += 1;
+            fees[5].amount = parseFloat(entry.price);
+        }
+    });
+    fees[0].count = Object.keys(horseCounts).length;
+    fees[0].amount = fees[0].count * price馬;
+    return fees;
+}
 
