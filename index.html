@@ -50,9 +50,9 @@
             <div id="ridersTableContainer" class="ridersTableContainer"></div>
             <hr>
             
-            <button id="updateButton" class="updateButton">エントリーに進む</button>
-            <span> ＊上記の情報確認してエントリーに進みます。No data is saved anywhere. refresh the page if you need to start again.</span>
-
+            <button id="updateButton" class="updateButton">上記の情報を確認してエントリーに進む</button>
+            <!--<span> ＊上記の情報確認してエントリーに進みます。No data is saved anywhere. refresh the page if you need to start again.</span>
+            -->
         </div>
         <!---------------------------------------------------------------------------------------------->
         
@@ -63,7 +63,11 @@
             data-headers="number,teamName,scheduleNumber,scheduleDate,eventCode,eventName,riderName,riderRegNumber,horseName,horseRegNumber,priceCode,price,comment">追加</button>
             
             <hr>
-            <button type="button" id="updateDataWithEntriesButton">Update Data</button>
+            <button id="updateDataWithEntriesButton" class="updateDataWithEntriesButton">全エントリー確認</button>
+
+            <div id="feesTableContainer" class="feesTableContainer" style="display: none;"></div>
+            <hr>
+            <button id="downloadJsonAndFinishButton" class="downloadJsonAndFinishButton" style="display: none;">.jsonファイルをダウンロード</button>
 
         </div>
         

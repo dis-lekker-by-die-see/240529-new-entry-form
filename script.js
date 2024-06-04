@@ -1,6 +1,7 @@
 
 let clubSelected = false;
 let wasNewClubOptionSelected = false;
+let selectedFileName = "";
 let updatedData = {};
 let newRowNumbers = { club: 0, teams: 0, horses: 0, riders: 0, entries: 0 };
 let events = {};
@@ -58,7 +59,8 @@ function processClubSelection(clubData) {
             clubSelectContainer.style.display = 'none';
             const clubInfoContainer = document.getElementById('clubInfoContainer');
             clubInfoContainer.style.display = 'block';
-            fetchAndParseJSON(club.fileName, true);
+            selectedFileName = club.fileName;
+            fetchAndParseJSON(selectedFileName, true);
         } else {
             codeInput.style.border = '2px solid red';
         }
@@ -440,12 +442,18 @@ document.getElementById('updateButton').addEventListener('click', function() {
             return;
         }
     } else {
-        console.log('Updated Data:', updatedData);
-        clubInfoContainer.style.display = 'none';        
-        const entriesContainer = document.getElementById('entriesContainer');
-        entriesContainer.style.display = 'block';
-        displayEntries(true);
-        loadEventCSV();
+
+        const userChoiceToProceed = confirm(`Are you sure you want to continue to Entries? You cannot come back.\n\n'Cancel' to keep editing.\n'OK' to continue to Entries.`);
+        if (userChoiceToProceed) {
+            console.log('Updated Data:', updatedData);
+            clubInfoContainer.style.display = 'none';        
+            const entriesContainer = document.getElementById('entriesContainer');
+            entriesContainer.style.display = 'block';
+            displayEntries(true);
+            loadEventCSV();
+        } else {
+            return;
+        }
     }
 });
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -718,8 +726,65 @@ document.getElementById('updateDataWithEntriesButton').addEventListener('click',
     updatedData['fees'] = calculateFees();
     console.log('Updated Data With Entries:', updatedData);
 
-    
-    //console.log(JSON.stringify({ entries: tableData })); // Output the collected data
+
+    ////////////////////////////////////////////
+    const tableContainer = document.getElementById('feesTableContainer');
+    let feesTableHTML = `
+        <h4>エントリー料 / Fees</h4>
+        <table>
+            <tr>
+                <th>費用項目</th>
+                <th>数</th>
+                <th>金額</th>
+            </tr>
+            <tr>
+                <td>馬登録料</td>
+                <td>${updatedData.fees[0].count}</td>
+                <td>${updatedData.fees[0].amount}</td>
+            </tr>
+            <tr>
+                <td>公認競技</td>
+                <td>${updatedData.fees[1].count}</td>
+                <td>${updatedData.fees[1].amount}</td>
+            </tr>
+            <tr>
+                <td>一般競技</td>
+                <td>${updatedData.fees[2].count}</td>
+                <td>${updatedData.fees[2].amount}</td>
+            </tr>
+            <tr>
+                <td>一般競技 (フレンドシップ)</td>
+                <td>${updatedData.fees[3].count}</td>
+                <td>${updatedData.fees[3].amount}</td>
+            </tr>
+            <tr>
+                <td>一般競技 (ジムカーナ)</td>
+                <td>${updatedData.fees[4].count}</td>
+                <td>${updatedData.fees[4].amount}</td>
+            </tr>
+            <tr>
+                <td>一般競技 (クロス)</td>
+                <td>${updatedData.fees[5].count}</td>
+                <td>${updatedData.fees[5].amount}</td>
+            </tr>
+            <tr>
+                <td>合計</td>
+                <td></td>
+                <td>${updatedData.fees[0].amount
+                    +updatedData.fees[1].amount
+                    +updatedData.fees[2].amount
+                    +updatedData.fees[3].amount
+                    +updatedData.fees[4].amount
+                    +updatedData.fees[5].amount}</td>
+            </tr>
+        </table>
+    `;
+    //////////////////////////////////////////////////
+    tableContainer.innerHTML = feesTableHTML;
+    tableContainer.style.display = 'block';
+    const downloadAndFinishButton = document.getElementById('downloadJsonAndFinishButton');
+    downloadAndFinishButton.style.display = 'block';
+
 });
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 function extractEntriesTableData() {
@@ -809,11 +874,9 @@ function calculateFees() {
     const horseCounts = {};
     updatedData.entries.forEach(entry => {
         horseCounts[entry.horseName] = (horseCounts[entry.horseName] || 0) + 1;
-
         if (entry.priceCode == "公認") {
             fees[1].count += 1;
             fees[1].amount += parseFloat(entry.price);
-            
         }
         if (entry.priceCode == "一般") {
             fees[2].count += 1;
@@ -836,4 +899,34 @@ function calculateFees() {
     fees[0].amount = fees[0].count * price馬;
     return fees;
 }
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+document.getElementById('downloadJsonAndFinishButton').addEventListener('click', function() {
+    downloadArrayAsJson(selectedFileName);
+});
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+function downloadArrayAsJson(filename) {
+    const jsonString = JSON.stringify(updatedData);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename || 'download.json';
+    document.body.appendChild(a);
+    a.click();
+
+    // Clean up
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+// // Example usage
+// const data = [{ name: 'John', age: 30 }, { name: 'Jane', age: 25 }];
+// downloadArrayAsJson(data, 'users.json');
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 
