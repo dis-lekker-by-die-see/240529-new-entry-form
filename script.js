@@ -8,7 +8,7 @@ let events = {};
 const price馬 = 12000;
 //*///////////////////////////////////////////////////////////////////////////////////////////////////////
 document.addEventListener("DOMContentLoaded", function() {
-    fetch('json_files_list.json')
+    fetch('ファイル/団体/clubs.json') 
         .then(response => response.json())
         .then(data => {
             const clubData = data;
@@ -40,7 +40,7 @@ function processClubSelection(clubData) {
             clubSelectContainer.style.display = 'none';
             const clubInfoContainer = document.getElementById('clubInfoContainer');
             clubInfoContainer.style.display = 'block';
-            fetchAndParseJSON('My乗馬クラブ_1234.json', false);
+            fetchAndParseJSON('ファイル/団体/My乗馬クラブ_1234.json', false);
             wasNewClubOptionSelected = true;
         } else if (selectedClub !== "") {
             codeInput.style.display = 'block';
@@ -60,7 +60,7 @@ function processClubSelection(clubData) {
             const clubInfoContainer = document.getElementById('clubInfoContainer');
             clubInfoContainer.style.display = 'block';
             selectedFileName = club.fileName;
-            fetchAndParseJSON(selectedFileName, true);
+            fetchAndParseJSON(`ファイル/団体/${selectedFileName}`, true);
         } else {
             codeInput.style.border = '2px solid red';
         }
@@ -583,7 +583,7 @@ function validateAllInputs() {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 async function loadEventCSV() {
     try {
-        const response = await fetch('仮日程.csv'); 
+        const response = await fetch('ファイル/日程/仮日程.csv'); 
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
