@@ -26,7 +26,7 @@ function processClubSelection(clubData) {
     const newClubRecord = document.createElement('option');
 
     newClubRecord.value = "new-club";
-    newClubRecord.textContent = "- - 新登録 - -";
+    newClubRecord.textContent = "- - 新規登録 - -";
     clubSelect.appendChild(newClubRecord);
     clubData.forEach(club => {
         const option = document.createElement('option'); // <option value="">Select a club</option>
@@ -40,7 +40,7 @@ function processClubSelection(clubData) {
             clubSelectContainer.style.display = 'none';
             const clubInfoContainer = document.getElementById('clubInfoContainer');
             clubInfoContainer.style.display = 'block';
-            fetchAndParseJSON('dummy.json', false);
+            fetchAndParseJSON('My乗馬クラブ_1234.json', false);
             wasNewClubOptionSelected = true;
         } else if (selectedClub !== "") {
             codeInput.style.display = 'block';
@@ -156,9 +156,9 @@ function displayTeams(teams, canEdit) {
     const tableContainer = document.getElementById('teamsTableContainer');
     let tableHTML = ``;
     tableHTML += `<p class="clubInfoTableText">
-        いくつかの団体・乗馬クラブには複数の所属・チームがあります。例えば、(団体) 蒜山ホースパーク >> (所属) 蒜山ホースパーク、(団体) 蒜山ホースパーク >> (所属) 真庭市スポーツ少年団。
+        いくつかの団体・乗馬クラブには複数の所属・チームがあります。<br>例えば、(団体) 蒜山ホースパーク >> (所属) 蒜山ホースパーク、(団体) 蒜山ホースパーク >> (所属) 真庭市スポーツ少年団。
         <br>
-        所属名・チームが団体名・乗馬クラブと同じ場合は、ここに団体名をもう一度追加してください。
+        注意：所属名・チームが団体名・乗馬クラブと同じ場合は、ここに団体名をもう一度追加してください。
         </p>`;
     tableHTML += `<table><tr><th>番</th><th>所属名</th>`;
     if (canEdit) {
@@ -356,7 +356,7 @@ function addRow(containerId, headers) {
                 addButton.addEventListener('click', handleAddRow);
             }
         } else {
-            alert('Please fill in all cells.');
+            alert(`すべてのセルに記入してください。`);
         }
     });
 }
@@ -435,7 +435,7 @@ document.getElementById('updateButton').addEventListener('click', function() {
         }
     });
     if (isEmptyTable) {
-        const userChoice = confirm("One or more tables have no valid data rows. Click 'Cancel' to go back and edit, or 'OK' to reload the page.");
+        const userChoice = confirm(`1つ以上のテーブルに有効なデータ行がありません。「Cancel」をクリックして戻り、編集するか、「OK」をクリックしてページを再読み込みしてください。`);
         if (userChoice) {
             window.location.reload(); 
         } else {
@@ -443,7 +443,7 @@ document.getElementById('updateButton').addEventListener('click', function() {
         }
     } else {
 
-        const userChoiceToProceed = confirm(`Are you sure you want to continue to Entries? You cannot come back.\n\n'Cancel' to keep editing.\n'OK' to continue to Entries.`);
+        const userChoiceToProceed = confirm(`エントリーに進んでもよろしいですか？戻ることはできません。\n\n「Cancel」をクリックして編集を続ける。\n「OK」をクリックしてエントリーに進む。`);
         if (userChoiceToProceed) {
             console.log('Updated Data:', updatedData);
             clubInfoContainer.style.display = 'none';        
@@ -497,13 +497,13 @@ function addEntryRow(headers) {
     const table = tableContainer.querySelector('table');
     const newRow = document.createElement('tr');
     if (!validateAllInputs()) {
-        alert('Please fill all required fields before adding a new entry.');
+        alert(`新しいエントリーを追加する前に、すべての必須項目を記入してください。`);
         return; // Stop the function if not all inputs are valid
     }
     newRowNumbers.entries += 1;
     headers.forEach(header => {
         let newCell = document.createElement('td');
-        let inputElement = null; // To hold any input/select element for validation purpose
+        let inputElement = null;
         switch (header) {
             case 'number':
                 newCell.textContent = `${newRowNumbers.entries}`;
@@ -726,7 +726,6 @@ document.getElementById('updateDataWithEntriesButton').addEventListener('click',
     updatedData['fees'] = calculateFees();
     console.log('Updated Data With Entries:', updatedData);
 
-
     ////////////////////////////////////////////
     const tableContainer = document.getElementById('feesTableContainer');
     let feesTableHTML = `
@@ -836,7 +835,6 @@ function extractEntriesTableData() {
     });
     return entries;
 }
-
 //////////////////////////////////////////////////////////////////////////////////////////////
 function calculateFees() {
     let fees = [
@@ -901,31 +899,17 @@ function calculateFees() {
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 document.getElementById('downloadJsonAndFinishButton').addEventListener('click', function() {
-    downloadArrayAsJson(selectedFileName);
-});
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-function downloadArrayAsJson(filename) {
     const jsonString = JSON.stringify(updatedData);
     const blob = new Blob([jsonString], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = filename || 'download.json';
+    a.download = selectedFileName || 'download.json';
     document.body.appendChild(a);
     a.click();
-
-    // Clean up
-    document.body.removeChild(a);
+    document.body.removeChild(a); //clean up
     URL.revokeObjectURL(url);
-}
-
-// // Example usage
-// const data = [{ name: 'John', age: 30 }, { name: 'Jane', age: 25 }];
-// downloadArrayAsJson(data, 'users.json');
-
-
-
-
+});
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
