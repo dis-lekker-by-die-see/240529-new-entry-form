@@ -40,7 +40,7 @@ function processClubSelection(clubData) {
             clubSelectContainer.style.display = 'none';
             const clubInfoContainer = document.getElementById('clubInfoContainer');
             clubInfoContainer.style.display = 'block';
-            fetchAndParseJSON('ファイル/団体/例の乗馬クラブ--パス-1234_1234.json', false);
+            fetchAndParseJSON('ファイル/団体/例の乗馬クラブ_1234.json', false);
             wasNewClubOptionSelected = true;
         } else if (selectedClub !== "") {
             codeInput.style.display = 'block';
