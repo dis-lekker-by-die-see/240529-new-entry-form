@@ -1,7 +1,12 @@
 [
     {
-        "fileName": "例の乗馬クラブ_1234.json",
-        "clubName": "例の乗馬クラブ",
+        "fileName": "例の乗馬クラブ_1234.json",
+        "clubName": "例の乗馬クラブ",
         "code": 1234
+    },
+    {
+        "fileName": "例の乗馬クラブ_4567.json",
+        "clubName": "例の乗馬クラブ",
+        "code": 4567
     }
 ]
