@@ -8,14 +8,22 @@ let events = {};
 const price馬 = 12000;
 //*///////////////////////////////////////////////////////////////////////////////////////////////////////
 document.addEventListener("DOMContentLoaded", function() {
-    fetch('ファイル/団体/clubs.json') 
-        .then(response => response.json())
-        .then(data => {
-            const clubData = data;
-            processClubSelection(clubData);
-            console.log(clubData); // For debugging purposes
-        })
-        .catch(error => console.error('Error fetching the JSON file:', error));
+
+    ///
+    const path = `ファイル/団体/clubs.json`;
+    const encodedClubDataPath = path.split('/').map(segment => encodeURIComponent(segment)).join('/');
+    console.log(encodedClubDataPath);  // Outputs: ファイル/団体/用例乗馬クラブ_1234.json with each segment encoded
+    ///
+
+
+    fetch(encodedClubDataPath) 
+    .then(response => response.json())
+    .then(data => {
+        const clubData = data;
+        processClubSelection(clubData);
+        console.log(clubData); // For debugging purposes
+    })
+    .catch(error => console.error('Error fetching the JSON file:', error));
 });
 //*///////////////////////////////////////////////////////////////////////////////////////////////////////
 function processClubSelection(clubData) {
@@ -40,7 +48,14 @@ function processClubSelection(clubData) {
             clubSelectContainer.style.display = 'none';
             const clubInfoContainer = document.getElementById('clubInfoContainer');
             clubInfoContainer.style.display = 'block';
-            fetchAndParseJSON(encodeURI(`ファイル/団体/用例乗馬クラブ_1234.json`), false);
+
+            ///
+            const path = 'ファイル/団体/用例乗馬クラブ_1234.json';
+            const encodedNewClubPath = path.split('/').map(segment => encodeURIComponent(segment)).join('/');
+            console.log(encodedNewClubPath);  // Outputs: ファイル/団体/用例乗馬クラブ_1234.json with each segment encoded
+            ///
+
+            fetchAndParseJSON(encodedNewClubPath, false);
             wasNewClubOptionSelected = true;
         } else if (selectedClub !== "") {
             codeInput.style.display = 'block';
@@ -60,8 +75,16 @@ function processClubSelection(clubData) {
             const clubInfoContainer = document.getElementById('clubInfoContainer');
             clubInfoContainer.style.display = 'block';
             selectedFileName = club.fileName;
-            fetchAndParseJSON(encodeURI(`ファイル/団体/${selectedFileName}`), true);
-            console.log(`ファイル/団体/${selectedFileName}`);
+
+            ///
+            const path = `ファイル/団体/${selectedFileName}`;
+            const encodedClubPath = path.split('/').map(segment => encodeURIComponent(segment)).join('/');
+            console.log(encodedClubPath);  // Outputs: ファイル/団体/用例乗馬クラブ_1234.json with each segment encoded
+            ///
+
+
+            fetchAndParseJSON(encodedClubPath, true);
+            
         } else {
             codeInput.style.border = '2px solid red';
         }
