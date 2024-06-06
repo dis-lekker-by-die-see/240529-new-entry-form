@@ -61,6 +61,7 @@ function processClubSelection(clubData) {
             clubInfoContainer.style.display = 'block';
             selectedFileName = club.fileName;
             fetchAndParseJSON(`ファイル/団体/${selectedFileName}`, true);
+            console.log(`ファイル/団体/${selectedFileName}`);
         } else {
             codeInput.style.border = '2px solid red';
         }
