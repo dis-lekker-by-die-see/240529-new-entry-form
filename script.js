@@ -40,7 +40,7 @@ function processClubSelection(clubData) {
             clubSelectContainer.style.display = 'none';
             const clubInfoContainer = document.getElementById('clubInfoContainer');
             clubInfoContainer.style.display = 'block';
-            fetchAndParseJSON(`ファイル/団体/用例乗馬クラブ_1234.json`, false);
+            fetchAndParseJSON(encodeURI(`ファイル/団体/用例乗馬クラブ_1234.json`), false);
             wasNewClubOptionSelected = true;
         } else if (selectedClub !== "") {
             codeInput.style.display = 'block';
@@ -60,7 +60,7 @@ function processClubSelection(clubData) {
             const clubInfoContainer = document.getElementById('clubInfoContainer');
             clubInfoContainer.style.display = 'block';
             selectedFileName = club.fileName;
-            fetchAndParseJSON(`ファイル/団体/${selectedFileName}`, true);
+            fetchAndParseJSON(encodeURI(`ファイル/団体/${selectedFileName}`), true);
             console.log(`ファイル/団体/${selectedFileName}`);
         } else {
             codeInput.style.border = '2px solid red';
