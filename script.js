@@ -75,36 +75,71 @@ function processClubSelection(clubData) {
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 //              Read data
-async function fetchAndParseJSON(file, canEdit) {
-    try {
-        const response = await fetch(file);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log('JSON Data:', data);
-        
-        // Extract necessary information
-        const club = data.club;
-        const teams = data.teams;
-        const horses = data.horses;
-        const riders = data.riders;
-        if (canEdit){
-            // Call functions to display data in tables
-            displayClub(club, true);
-            displayTeams(teams, true);
-            displayHorses(horses, true);
-            displayRiders(riders, true);
-        } else {
-            displayClub(club, false);
-            displayTeams(teams, false);
-            displayHorses(horses, false);
-            displayRiders(riders, false);
-        }
-    } catch (error) {
-        console.error('Error fetching or parsing the JSON file:', error);
-    }
+function fetchAndParseJSON(file, canEdit) {
+    fetch(file)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('JSON Data:', data);
+            // Extract necessary information
+            const club = data.club;
+            const teams = data.teams;
+            const horses = data.horses;
+            const riders = data.riders;
+
+            if (canEdit) {
+                // Call functions to display data in editable tables
+                displayClub(club, true);
+                displayTeams(teams, true);
+                displayHorses(horses, true);
+                displayRiders(riders, true);
+            } else {
+                // Display data in read-only tables
+                displayClub(club, false);
+                displayTeams(teams, false);
+                displayHorses(horses, false);
+                displayRiders(riders, false);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching or parsing the JSON file:', error);
+        });
 }
+
+// async function fetchAndParseJSON(file, canEdit) {
+//     try {
+//         const response = await fetch(file);
+//         if (!response.ok) {
+//             throw new Error(`HTTP error! status: ${response.status}`);
+//         }
+//         const data = await response.json();
+//         console.log('JSON Data:', data);
+        
+//         // Extract necessary information
+//         const club = data.club;
+//         const teams = data.teams;
+//         const horses = data.horses;
+//         const riders = data.riders;
+//         if (canEdit){
+//             // Call functions to display data in tables
+//             displayClub(club, true);
+//             displayTeams(teams, true);
+//             displayHorses(horses, true);
+//             displayRiders(riders, true);
+//         } else {
+//             displayClub(club, false);
+//             displayTeams(teams, false);
+//             displayHorses(horses, false);
+//             displayRiders(riders, false);
+//         }
+//     } catch (error) {
+//         console.error('Error fetching or parsing the JSON file:', error);
+//     }
+// }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //          Display Tables 
 function displayClub(club, canEdit) {
