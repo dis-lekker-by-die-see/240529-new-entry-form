@@ -41,7 +41,6 @@ function processClubSelection(clubData) {
             const clubInfoContainer = document.getElementById('clubInfoContainer');
             clubInfoContainer.style.display = 'block';
             fetchAndParseJSON(`ファイル/団体/用例乗馬クラブ_1234.json`, false);
-            ///////////////////ファイル/団体/用例乗馬クラブ_1234.json
             wasNewClubOptionSelected = true;
         } else if (selectedClub !== "") {
             codeInput.style.display = 'block';
